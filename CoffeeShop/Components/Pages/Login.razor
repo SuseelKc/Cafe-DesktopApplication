@@ -1,17 +1,18 @@
 ﻿@page "/"
-@inject NavigationManager Navigate
+@inject NavigationManager NavigationManager
+@inject CoffeeShop.Services.AuthService AuthService
 
 <h3>Login</h3>
 
-<form>
+<form @onsubmit="login">
     <label for="username">Username:</label>
-    <input type="text" id="username" bind="@username" />
+    <input type="text" id="username" bind="@username"/>
     <br><br>
     <label for="password">Password:</label>
-    <input type="password" id="password" bind="@password" />
+    <input type="password" id="password" bind="@password"/>
 
     <br><br>
-    <button type="button" @onclick="login">Login</button>
+    <button type="submit">Login</button>
 </form>
 @code {
     private string? username;
@@ -19,16 +20,20 @@
 
     private void login()
     {
- 
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        { 
+            return;
+        }
         
-        if (username == "admin" && password == "admin")
+        if (AuthService.Login(username, password))
         {
-            Navigate.NavigateTo("/home");
+            // Redirect to a secured page
+            AuthService.RedirectToPage(NavigationManager, "/home");
         }
         else
         {
             // Navigate to "/" when credentials are incorrect
-            Navigate.NavigateTo("/");
+            NavigationManager.NavigateTo("/");
         }
     }
 }

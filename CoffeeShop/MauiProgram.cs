@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿
+using Microsoft.Extensions.Logging;
 
 namespace CoffeeShop
 {
@@ -16,8 +17,11 @@ namespace CoffeeShop
 
             builder.Services.AddMauiBlazorWebView();
 
+            //* Register AuthService.cs as a scoped service*/
+            builder.Services.AddScoped<Services.AuthService>();
+
 #if DEBUG
-    		builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
 #endif
 
