@@ -6,10 +6,10 @@
 
 <form @onsubmit="login">
     <label for="username">Username:</label>
-    <input type="text" id="username" bind="@username"/>
+    <input type="text" id="username" @bind-value="username"/>
     <br><br>
     <label for="password">Password:</label>
-    <input type="password" id="password" bind="@password"/>
+    <input type="password" id="password" @bind-value="password" />
 
     <br><br>
     <button type="submit">Login</button>
