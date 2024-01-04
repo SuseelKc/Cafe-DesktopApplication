@@ -1,9 +1,20 @@
-﻿@inherits LayoutComponentBase
+﻿
+@inherits LayoutComponentBase
+@inject NavigationManager NavManager
 
 <div class="page">
-    <div class="sidebar">
+
+    @if (_globalState.CurrentUser != null)
+    {
+        <div class="sidebar">
+            <NavMenu />
+          @*   <NavMenu Username="@_globalState.CurrentUser.Username" UserRole="@_globalState.CurrentUser.Role" LogoutHandler="LogoutHandler" /> *@
+        </div>
+    }
+
+    @* <div class="sidebar">
         <NavMenu />
-    </div>
+    </div> *@
 
     <main>
         <div class="top-row px-4">
@@ -11,7 +22,25 @@
         </div>
 
         <article class="content px-4">
+            <CascadingValue Value="@_globalState">
             @Body
+            </CascadingValue>
         </article>
     </main>
 </div>
+@code {
+
+    private GlobalState _globalState = new();
+
+    protected override void OnInitialized()
+    {
+        UserService.SeedUsers();
+        // PDFService.SavePDF();
+    }
+
+    private void LogoutHandler()
+    {
+        _globalState.CurrentUser = null;
+        NavManager.NavigateTo("/login");
+    }
+}

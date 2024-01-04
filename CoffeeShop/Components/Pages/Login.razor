@@ -15,25 +15,62 @@
     <button type="submit">Login</button>
 </form>
 @code {
-    private string? username;
-    private string? password;
+    [CascadingParameter]
+    private GlobalState _globalState { get; set; } 
+    private bool _showDefaultCredentials { get; set; }
+    private string? username { get; set; }
+    private string? password { get; set; }
+    private string _errorMessage = "";
+
+
+    protected override void OnInitialized()
+    {
+        try
+        {
+            var user = UserService.Login(UserService.SeedUsername, UserService.SeedPassword);
+            _showDefaultCredentials = user.HasInitialPassword;
+        }
+        catch { }
+
+        _globalState.CurrentUser = null;
+        _errorMessage = "";
+    }
 
     private void login()
     {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-        { 
-            return;
-        }
-        
-        if (AuthService.Login(username, password))
+        try
         {
-            // Redirect to a secured page
-            AuthService.RedirectToPage(NavigationManager, "/home");
+            _errorMessage = "";
+            _globalState.CurrentUser = UserService.Login(username, password);
+            if (_globalState.CurrentUser != null)
+            {
+                // NavigationManager.NavigateTo("/home");
+                NavigationManager.NavigateTo(_globalState.CurrentUser.HasInitialPassword ? "/change-password" : "/");
+            }
         }
-        else
+        catch (Exception e)
         {
-            // Navigate to "/" when credentials are incorrect
-            NavigationManager.NavigateTo("/");
+           _errorMessage = e.Message;
+            Console.WriteLine(e);
         }
     }
+
+    // private void login()
+    // {
+    //     if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+    //     { 
+    //         return;
+    //     }
+        
+    //     if (AuthService.Login(username, password))
+    //     {
+    //         // Redirect to a secured page
+    //         AuthService.RedirectToPage(NavigationManager, "/home");
+    //     }
+    //     else
+    //     {
+    //         // Navigate to "/" when credentials are incorrect
+    //         NavigationManager.NavigateTo("/");
+    //     }
+    // }
 }

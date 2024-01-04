@@ -1,4 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject NavigationManager NavigationManager
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">CoffeeShop</a>
     </div>
@@ -23,6 +24,30 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
         </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="change-password">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Change Password
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink class="nav-link text-danger" role="button" @onclick="LogoutHandler">
+                <span class="bi bi-list-nested-nav-menu" /> Logout
+            </NavLink>
+        </div>
       
     </nav>
 </div>
+
+@code {
+
+    private void LogoutHandler()
+    {
+        NavigationManager.NavigateTo("/");
+        NavigationManager.NavigateTo("/");
+        
+    }
+
+   
+}

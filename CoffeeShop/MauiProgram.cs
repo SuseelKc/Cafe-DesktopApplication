@@ -20,6 +20,7 @@ namespace CoffeeShop
             //* Register AuthService.cs as a scoped service*/
             builder.Services.AddScoped<Services.AuthService>();
 
+
 #if DEBUG
             builder.Services.AddBlazorWebViewDeveloperTools();
     		builder.Logging.AddDebug();
