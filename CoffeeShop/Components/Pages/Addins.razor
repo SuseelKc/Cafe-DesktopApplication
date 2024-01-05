@@ -1,0 +1,75 @@
+﻿@page "/addins"
+@using CoffeeShop.Models
+<h3>Addins</h3>
+
+
+<EditForm Model="@addins">
+    <div>
+        <!-- ... -->
+        <label class="form-label">Coffee Name</label>
+        <input type="text" class="form" id="coffee" @bind="addins.Name" />
+        <br><br>
+
+        <label class="form-label">Price</label>
+        <input type="number" class="form" id="price" @bind="addins.Price" />
+        <!-- ... -->
+        <button class="btn btn-primary" @onclick="Add">Save</button>
+    </div>
+</EditForm>
+<br>
+<br>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Flavours</td>
+
+            <td>Price</td>
+            <td>Action</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in addin)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+
+                <td>@item.Price</td>
+                <td><button class="btn btn-danger" @onclick="() => Delete(item.Id)">Delete</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<CoffeeShop.Models.Addins> addin { get; set; }
+
+    private CoffeeShop.Models.Addins addins = new();
+
+    protected override void OnInitialized()
+    {
+        addin = AddinService.GetAll();
+    }
+
+    private void Add()
+    {
+        if (string.IsNullOrWhiteSpace(addins.Name))
+        {
+            return;
+        }
+        addins.Id = addin.Count + 1;
+        AddinService.AddAddins(addins.Id, addins.Name, addins.Price);
+
+        addins = new();
+        addin = AddinService.GetAll();
+
+    }
+
+    private void Delete(int Id)
+    {
+        AddinService.DeleteAddins(Id);
+        addin = AddinService.GetAll();
+    }
+
+}
