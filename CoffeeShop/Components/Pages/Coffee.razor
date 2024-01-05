@@ -1,0 +1,69 @@
+﻿@page "/coffee"
+
+<h3>Coffee</h3>
+
+<EditForm Model="@coffees">
+    <div>
+        <!-- ... -->
+        <label class="form-label">Coffee Name</label>
+        <input type="text" class="form" id="coffee" @bind="coffees.CoffeeName" />
+        <br><br>
+        <label class="form-label">Qty</label>
+        <input type="number" class="form" id="qty" @bind="coffees.Qty" />
+        <br><br>
+        <label class="form-label">Price</label>
+        <input type="number" class="form" id="price" @bind="coffees.Price" />
+        <!-- ... -->
+        <button class="btn btn-primary" @onclick="Add">Save</button>
+    </div>
+</EditForm>
+<br>
+<br>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Coffee</td>
+            <td>Qty</td>
+            <td>Price</td>
+            <td>Edit</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in coffee)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.CoffeeName</td>
+                <td>@item.Qty</td>
+                <td>@item.Price</td>
+                <td><button class="btn btn-danger" @onclick="() => Delete(item.Id)">Delete</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<CoffeeShop.Models.Coffee> coffee { get; set; }
+
+    private CoffeeShop.Models.Coffee coffees = new();
+    
+    protected override void OnInitialized()
+    {
+        coffee = CoffeeService.GetAll();
+    }
+
+    private void Add()
+    {
+        int coffeesId = coffee.Count + 1;
+        CoffeeService.AddCoffee(coffeesId, coffees.CoffeeName, coffees.Qty, coffees.Price);
+        coffees = new();
+
+    }
+
+    private void Delete(int Id)
+    {
+        
+    }
+
+}

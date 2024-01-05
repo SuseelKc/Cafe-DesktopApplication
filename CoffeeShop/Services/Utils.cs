@@ -65,6 +65,12 @@ namespace CoffeeShop.Services
         //{
         //    return Path.Combine(GetAppDirectoryPath(), userId.ToString() + "_todos.json");
         //}
+
+        public static string GetCoffeeFilePath()
+        {
+            return Path.Combine(GetAppDirectoryPath(), "coffee.json");
+        }
+
     }
 }
 
