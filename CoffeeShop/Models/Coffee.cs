@@ -10,8 +10,10 @@ namespace CoffeeShop.Models
     public class Coffee
     {
         public int Id { get; set; }
-        public string CoffeeName { get; set; }
+        public string? CoffeeName { get; set; }
        
         public int Price { get; set; }
     }
+
+
 }

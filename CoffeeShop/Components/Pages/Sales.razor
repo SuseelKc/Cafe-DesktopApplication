@@ -1,0 +1,80 @@
+﻿@page "/sales"
+
+<h3>Sales</h3>
+
+<form>
+    <div>
+        <h3>Create Bill</h3>
+        
+        <!-- Coffee dropdown -->
+        <label class="form-label">Coffee Name</label>
+        <select class="form" @bind="selectedCoffeeId" @oninput="UpdateCoffeePrice">
+            <option value="">Select Coffee</option>
+            @foreach (var coffeeItem in coffee)
+            {
+                <option value="@coffeeItem.Id">@coffeeItem.CoffeeName</option>
+            }
+        </select>
+        
+        <!-- Display selected coffee price -->
+        <label class="form-label">Price</label>
+        <input value="@selectedCoffeePrice" readonly />
+        <br><br>
+
+        <!-- Addins dropdown -->
+        <label class="form-label">Addins</label>
+        <select class="form" @bind="selectedAddinId" @oninput="UpdateAddinPrice">
+            <option value="">Select Addin</option>
+            @foreach (var addinItem in addin)
+            {
+                <option value="@addinItem.Id">@addinItem.Name</option>
+            }
+        </select>
+        
+        <!-- Display selected addin price -->
+        <label class="form-label">Price</label>
+        <input value="@selectedAddinPrice" readonly />
+        <br><br>
+
+        <button class="btn btn-primary" @onclick="Add">Add</button>
+    </div>
+</form>
+
+@code {
+    private List<CoffeeShop.Models.Addins> addin { get; set; }
+    private List<CoffeeShop.Models.Coffee> coffee { get; set; }
+
+    private int selectedCoffeeId { get; set; }
+    private int selectedAddinId { get; set; }
+
+    private int selectedCoffeePrice { get; set; }
+    private int selectedAddinPrice { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Initialize your data
+        addin = AddinService.GetAll();
+        coffee = CoffeeService.GetAll();
+    }
+
+    private void UpdateCoffeePrice(ChangeEventArgs args)
+    {
+        var coffeeId = int.Parse(args.Value.ToString());
+        var selectedCoffee = coffee.FirstOrDefault(c => c.Id == coffeeId);
+        selectedCoffeePrice = selectedCoffee?.Price ?? 0;
+    }
+
+    private void UpdateAddinPrice(ChangeEventArgs args)
+    {
+        var addinId = int.Parse(args.Value.ToString());
+        var selectedAddin = addin.FirstOrDefault(a => a.Id == addinId);
+        selectedAddinPrice = selectedAddin?.Price ?? 0;
+    }
+
+    private void Add()
+    {
+        // Your logic to handle the selected coffee and addin Ids
+        // You can access the selectedCoffeeId and selectedAddinId variables here
+        // and perform any necessary actions.
+    }
+}
