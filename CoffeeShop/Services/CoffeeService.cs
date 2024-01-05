@@ -38,7 +38,7 @@ namespace CoffeeShop.Services
         }
 
         //adding the vlaue
-        public static List<Coffee> AddCoffee(int Id, string CoffeeName, int Qty, int Price)
+        public static List<Coffee> AddCoffee(int Id, string CoffeeName, int Price)
         {
             List<Coffee> coffee = GetAll(); // Retrieve the existing list
 
@@ -47,13 +47,29 @@ namespace CoffeeShop.Services
             {
                 Id = Id,
                 CoffeeName = CoffeeName,
-                Qty = Qty,
+              
                 Price = Price
             };
 
             coffee.Add(newCoffee); // Add the new coffee to the list
 
             SaveAll(coffee); // Save the updated list to the JSON file
+
+            return coffee;
+
+        }
+
+        public static List<Coffee> DeleteCoffee(int Id)
+        {
+
+            List<Coffee> coffee = GetAll();
+            var coffeeToDelete = coffee.FirstOrDefault(c=>c.Id == Id);
+
+            if (coffeeToDelete != null) {
+                coffee.Remove(coffeeToDelete);
+                SaveAll(coffee);
+            
+            }
 
             return coffee;
 

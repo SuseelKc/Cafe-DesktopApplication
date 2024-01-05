@@ -11,7 +11,7 @@ namespace CoffeeShop.Models
     {
         public int Id { get; set; }
         public string CoffeeName { get; set; }
-        public int Qty { get; set; }
+       
         public int Price { get; set; }
     }
 }

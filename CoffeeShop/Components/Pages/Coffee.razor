@@ -1,4 +1,5 @@
 ﻿@page "/coffee"
+@inject NavigationManager Navigation
 
 <h3>Coffee</h3>
 
@@ -8,9 +9,7 @@
         <label class="form-label">Coffee Name</label>
         <input type="text" class="form" id="coffee" @bind="coffees.CoffeeName" />
         <br><br>
-        <label class="form-label">Qty</label>
-        <input type="number" class="form" id="qty" @bind="coffees.Qty" />
-        <br><br>
+     
         <label class="form-label">Price</label>
         <input type="number" class="form" id="price" @bind="coffees.Price" />
         <!-- ... -->
@@ -24,7 +23,7 @@
         <tr>
             <td>Id</td>
             <td>Coffee</td>
-            <td>Qty</td>
+          
             <td>Price</td>
             <td>Edit</td>
         </tr>
@@ -35,7 +34,7 @@
             <tr>
                 <td>@item.Id</td>
                 <td>@item.CoffeeName</td>
-                <td>@item.Qty</td>
+              
                 <td>@item.Price</td>
                 <td><button class="btn btn-danger" @onclick="() => Delete(item.Id)">Delete</button></td>
             </tr>
@@ -47,7 +46,7 @@
     private List<CoffeeShop.Models.Coffee> coffee { get; set; }
 
     private CoffeeShop.Models.Coffee coffees = new();
-    
+
     protected override void OnInitialized()
     {
         coffee = CoffeeService.GetAll();
@@ -55,15 +54,22 @@
 
     private void Add()
     {
-        int coffeesId = coffee.Count + 1;
-        CoffeeService.AddCoffee(coffeesId, coffees.CoffeeName, coffees.Qty, coffees.Price);
+        if (string.IsNullOrWhiteSpace(coffees.CoffeeName))
+        {
+            return;
+        }
+        coffees.Id = coffee.Count + 1;
+        CoffeeService.AddCoffee(coffees.Id, coffees.CoffeeName, coffees.Price);
+       
         coffees = new();
-
+        coffee = CoffeeService.GetAll();
+        
     }
 
     private void Delete(int Id)
     {
-        
+        CoffeeService.DeleteCoffee(Id);
+        coffee = CoffeeService.GetAll();
     }
 
 }
