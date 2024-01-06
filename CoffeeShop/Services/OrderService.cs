@@ -94,7 +94,7 @@ namespace CoffeeShop.Services
 
             if (orders != null)
             {
-                orders.Clear(); // Use the Clear method to remove all items from the collection
+                orders.Clear(); // Clear method to removing all items from the collection
                 SaveAll(orders);
 
             }

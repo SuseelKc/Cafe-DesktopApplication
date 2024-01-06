@@ -93,6 +93,12 @@
                 </td>           
         </tr>
         }
+        <tr>
+            <td colspan="6"><strong>Grand Total:</strong></td>
+            <td><strong>@grandTotal</strong></td>
+            <td></td>
+        </tr>
+
     </tbody>
 </table>
 
@@ -101,6 +107,7 @@
     private List<CoffeeShop.Models.Coffee> coffee { get; set; }
     private List<CoffeeShop.Models.Order> order { get; set; }
     private CoffeeShop.Models.Order orders = new();
+    private decimal grandTotal = 0;
 
     private int selectedCoffeeId { get; set; }
     private int selectedAddinId { get; set; }
@@ -186,7 +193,6 @@
             return;
         }
 
-        // Get the selected coffee
 
         orders.Id = order.Count + 1;
 
@@ -230,6 +236,7 @@
         AddedName = orders.CustomerName;
         isNameEditable = false;
         order = OrderService.GetAll();
+        CalculateGrandTotal();
     }
 
     private void Delete(int Id)
@@ -237,15 +244,16 @@
         OrderService.DeleteOrder(Id);
 
         order = OrderService.GetAll();
+        CalculateGrandTotal();
 
     }
 
     private void clearAll()
     {
-        
+
         OrderService.ClearAllOrders();
         order = OrderService.GetAll();
-        
+
         // Reset form fields
         orders = new CoffeeShop.Models.Order();
         selectedCoffeeId = 0;
@@ -254,5 +262,11 @@
         selectedAddinPrice = 0;
         AddedName = "";
         isNameEditable = true;
+        grandTotal = 0;
+    }
+
+    private void CalculateGrandTotal()
+    {
+        grandTotal = order.Sum(item => item.TotalPrice);
     }
 }
