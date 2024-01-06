@@ -80,6 +80,13 @@ namespace CoffeeShop.Services
         }
 
 
+        //order path
+
+        public static string GetOrderFilePath()
+        {
+            return Path.Combine(GetAppDirectoryPath(), "orders.json");
+        }
+
     }
 }
 

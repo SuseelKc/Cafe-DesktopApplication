@@ -2,12 +2,20 @@
 
 <h3>Sales</h3>
 
-<form>
+<EditForm Model="@orders">
     <div>
         <h3>Create Bill</h3>
 
         <label>Name:</label>
-        <input type="text" />
+        @if (isNameEditable)
+        {
+            <input type="text" @bind="orders.CustomerName" />
+        }
+        else
+        {
+            <input type="text" @bind="@orders.CustomerName" readonly />
+        }
+
         <br><br>
         <!-- Coffee dropdown -->
         <label class="form-label">Coffee Name</label>
@@ -21,7 +29,7 @@
 
         <!-- Display selected coffee price -->
         <label class="form-label">Price</label>
-        <input value="@selectedCoffeePrice" readonly />
+        <input value="@selectedCoffeePrice"  readonly />
         <br><br>
 
         <!-- Addins dropdown -->
@@ -36,18 +44,19 @@
 
         <!-- Display selected addin price -->
         <label class="form-label">Price</label>
-        <input value="@selectedAddinPrice" readonly />
+        <input value="@selectedAddinPrice"   readonly />
         <br><br>
         <!-- Quantity-->
         <label class="form-label">Quantity</label>
-        <input type="number" />
-        <button class="btn btn-primary" @onclick="Add">Add</button>
+        <input type="number" @bind="orders.Qty"  />
+        <button class="btn btn-primary"  @onclick="Add">Add</button>
     </div>
-</form>
+</EditForm>
 <br>
 <br>
 <div class="d-flex justify-content-between">
-    <div><label>Name :</label><input type="text" readonly /></div>
+    <div><label>Name :</label><input type="text" value="@AddedName" readonly /></div>
+    <div><button class="btn btn-success">Generate Bill</button></div>
     <div><button class="btn btn-success">Generate PDF</button></div>
 </div>
 <br>
@@ -58,30 +67,38 @@
             <td>Id</td>
             <td>Coffee</td>
             <td>Addins</td>
-            <td>Price</td>
+            <td>CoffeePrice</td>
+            <td>AddinsPrice</td>
+            @* <td>Price</td> *@
             <td>Qty</td>
             <td>Costs</td>
             <td>Action</td>
         </tr>
     </thead>
     <tbody>
-
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+         @foreach(var items in order)
+            {
+        <tr>           
+                <td>@items.Id</td>
+                <td>@items.CoffeeName</td>
+                <td>@items.AddinName</td>
+                <td>@items.CoffeePrice</td>
+                <td>@items.AddinPrice</td>
+                <td>@items.Qty</td>
+                <td>@items.TotalPrice</td>
+                <td>
+                    <button class="btn btn-danger" @onclick="() => Delete(items.Id)">Delete</button>
+                </td>           
         </tr>
-
+        }
     </tbody>
 </table>
 
 @code {
     private List<CoffeeShop.Models.Addins> addin { get; set; }
     private List<CoffeeShop.Models.Coffee> coffee { get; set; }
+    private List<CoffeeShop.Models.Order> order { get; set; }
+    private CoffeeShop.Models.Order orders = new();
 
     private int selectedCoffeeId { get; set; }
     private int selectedAddinId { get; set; }
@@ -89,12 +106,19 @@
     private int selectedCoffeePrice { get; set; }
     private int selectedAddinPrice { get; set; }
 
+    private string AddedName = "";
+
+    private bool isNameEditable = true;
+
     protected override void OnInitialized()
     {
         // Initialize your data
         addin = AddinService.GetAll();
         coffee = CoffeeService.GetAll();
+        order = OrderService.GetAll();
     }
+
+
 
     private void UpdateCoffeePrice(ChangeEventArgs args)
     {
@@ -107,6 +131,8 @@
             {
                 var selectedCoffee = coffee?.FirstOrDefault(c => c.Id == coffeeId);
                 selectedCoffeePrice = selectedCoffee?.Price ?? 0;
+                orders.CoffeePrice = selectedCoffeePrice;
+
             }
             else
             {           
@@ -130,10 +156,11 @@
             {
                 var selectedAddin = addin?.FirstOrDefault(a => a.Id == addinId);
                 selectedAddinPrice = selectedAddin?.Price ?? 0;
+                orders.AddinPrice = selectedAddinPrice;
             }
             else
             {
-               
+
                 Console.WriteLine("Invalid addin ID format");
             }
         }
@@ -144,7 +171,58 @@
     }
 
     private void Add()
+    {      
+        // Get the selected coffee
+
+        orders.Id = order.Count + 1;
+
+        var selectedCoffee = coffee?.FirstOrDefault(c => c.Id == selectedCoffeeId);
+        orders.CoffeeName = selectedCoffee?.CoffeeName;
+
+        if (selectedAddinId != 0)
+        {
+            // Get the selected addin
+            var selectedAddin = addin?.FirstOrDefault(a => a.Id == selectedAddinId);
+            orders.AddinName = selectedAddin?.Name;
+
+
+        }
+        else
+        {
+            // No addin selected, set it to null
+            orders.AddinName = null;
+            orders.AddinPrice = null;
+        }
+
+
+        if (orders.AddinPrice != null)
+        {
+
+            int coffeePrice = orders.CoffeePrice ?? 0;
+            int addinsPrice = orders.AddinPrice ?? 0;
+            int total = coffeePrice + addinsPrice;
+            orders.TotalPrice = total * orders.Qty;
+
+
+        }
+        else
+        {
+            int coffeePrice = orders.CoffeePrice ?? 0;
+            orders.TotalPrice = coffeePrice * orders.Qty;
+        }
+
+        OrderService.AddOrder(orders.Id, orders.CustomerName, orders.CoffeeName, orders.AddinName, orders.CoffeePrice ?? 0, orders.AddinPrice ?? 0, orders.Qty, orders.TotalPrice);
+        // Set the added name for display
+        AddedName = orders.CustomerName;
+        isNameEditable = false;
+        order = OrderService.GetAll();
+    }
+
+    private void Delete(int Id)
     {
+        OrderService.DeleteOrder(Id);
+        
+        order = OrderService.GetAll();
 
     }
 }
