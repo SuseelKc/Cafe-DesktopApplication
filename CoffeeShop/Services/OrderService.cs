@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CoffeeShop.Models;
+using Microsoft.Maui.Controls;
 
 namespace CoffeeShop.Services
 {
@@ -81,6 +82,24 @@ namespace CoffeeShop.Services
             }
 
             return order;
+
+        }
+
+        public static void ClearAllOrders()
+
+        {
+
+            List<Models.Order> orders = GetAll();
+           
+
+            if (orders != null)
+            {
+                orders.Clear(); // Use the Clear method to remove all items from the collection
+                SaveAll(orders);
+
+            }
+
+        
 
         }
 

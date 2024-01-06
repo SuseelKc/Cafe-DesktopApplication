@@ -1,4 +1,5 @@
 ﻿@page "/sales"
+@inject NavigationManager Navigation
 
 <h3>Sales</h3>
 
@@ -19,7 +20,7 @@
         <br><br>
         <!-- Coffee dropdown -->
         <label class="form-label">Coffee Name</label>
-        <select class="form" @bind="selectedCoffeeId" @oninput="UpdateCoffeePrice">
+        <select class="form" @bind="selectedCoffeeId" @oninput="UpdateCoffeePrice" required>
             <option value="">Select Coffee</option>
             @foreach (var coffeeItem in coffee)
             {
@@ -48,7 +49,7 @@
         <br><br>
         <!-- Quantity-->
         <label class="form-label">Quantity</label>
-        <input type="number" @bind="orders.Qty"  />
+        <input type="number" @bind="orders.Qty"  required/>
         <button class="btn btn-primary"  @onclick="Add">Add</button>
     </div>
 </EditForm>
@@ -56,8 +57,9 @@
 <br>
 <div class="d-flex justify-content-between">
     <div><label>Name :</label><input type="text" value="@AddedName" readonly /></div>
+    <div><button class="btn btn-danger" @onclick="clearAll">Clear All</button></div>
     <div><button class="btn btn-success">Generate Bill</button></div>
-    <div><button class="btn btn-success">Generate PDF</button></div>
+    <div><button class="btn btn-primary">Generate PDF</button></div>
 </div>
 <br>
 <br>
@@ -124,6 +126,8 @@
     {
         var coffeeIdString = args.Value?.ToString();
 
+
+
         // Check if coffeeIdString is not empty or null before parsing
         if (!string.IsNullOrEmpty(coffeeIdString))
         {
@@ -172,6 +176,16 @@
 
     private void Add()
     {      
+        // Check if a coffee is selected
+        if (selectedCoffeeId == 0)
+        {
+            return;
+        }
+        if (orders.Qty <= 0)
+        {
+            return;
+        }
+
         // Get the selected coffee
 
         orders.Id = order.Count + 1;
@@ -221,8 +235,24 @@
     private void Delete(int Id)
     {
         OrderService.DeleteOrder(Id);
-        
+
         order = OrderService.GetAll();
 
+    }
+
+    private void clearAll()
+    {
+        
+        OrderService.ClearAllOrders();
+        order = OrderService.GetAll();
+        
+        // Reset form fields
+        orders = new CoffeeShop.Models.Order();
+        selectedCoffeeId = 0;
+        selectedAddinId = 0;
+        selectedCoffeePrice = 0;
+        selectedAddinPrice = 0;
+        AddedName = "";
+        isNameEditable = true;
     }
 }
