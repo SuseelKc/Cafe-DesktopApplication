@@ -151,5 +151,21 @@ namespace CoffeeShop.Services
             return users;
         }
 
+        public static List<Users> DeleteUser(Guid Id)
+        {
+
+            List<Users> user = GetAll();
+            var userToDelete = user.FirstOrDefault(c => c.Id == Id);
+
+            if (userToDelete != null)
+            {
+                user.Remove(userToDelete);
+                SaveAll(user);
+
+            }
+
+            return user;
+
+        }
     }
 }

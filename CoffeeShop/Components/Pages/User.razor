@@ -22,8 +22,8 @@
         <tr>
             <td>Id</td>
             <td>UserName</td>
-            <td>CreatedAt</td>
             <td>CreatedBy</td>
+            <td>CreatedAt</td>
             <td>Role</td>
             <td>Action</td>
         </tr>
@@ -32,12 +32,20 @@
         @foreach (var item in user)
         {
             <tr>
+                
                 <td>@item.Id</td>
                 <td>@item.Username</td>
                 <td>@item.CreatedBy</td>
                 <td>@item.CreatedAt</td>
                 <td>@item.Role</td>
-                @* <td><button class="btn btn-danger" @onclick="() => Delete(item.Id)">Delete</button></td> *@
+                <td>
+                    @if (@item.Role == Role.User)
+                    {
+                        <button class="btn btn-danger" @onclick="() => Delete(item.Id)">Delete</button>
+                    }
+                </td>
+                
+                
             </tr>
         }
     </tbody>
@@ -46,6 +54,9 @@
 
 
 @code {
+
+    public Role UserRole { get; set; }
+
     private List<CoffeeShop.Models.Users> user { get; set; }
 
     private CoffeeShop.Models.Users users = new();
@@ -69,9 +80,9 @@
 
     }
 
-    private void Delete(int Id)
+    private void Delete(Guid Id)
     {
-        // CoffeeService.DeleteCoffee(Id);
-        // coffee = CoffeeService.GetAll();
+        UserService.DeleteUser(Id);
+        user = UserService.GetAll();
     }
 }
