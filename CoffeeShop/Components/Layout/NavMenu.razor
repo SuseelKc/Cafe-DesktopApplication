@@ -10,7 +10,7 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="home" >
+            <NavLink class="nav-link" href="home">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
@@ -38,7 +38,6 @@
 
 
 
-
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="change-password">
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Change Password
@@ -46,23 +45,37 @@
         </div>
 
 
+        @if (UserRole == Role.Admin)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="Users">
+                    <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Users
+                </NavLink>
+            </div>
+
+        }
         <div class="nav-item px-3">
             <NavLink class="nav-link text-danger" role="button" @onclick="LogoutHandler">
                 <span class="bi bi-list-nested-nav-menu" /> Logout
             </NavLink>
         </div>
-      
+
     </nav>
 </div>
 
+
+
 @code {
+
+    [Parameter]
+    public Role UserRole { get; set; }
 
     private void LogoutHandler()
     {
         NavigationManager.NavigateTo("/");
         NavigationManager.NavigateTo("/");
-        
+
     }
 
-   
+
 }

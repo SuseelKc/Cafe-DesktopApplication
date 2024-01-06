@@ -126,5 +126,30 @@ namespace CoffeeShop.Services
             return user;
         }
 
+
+        //create staff
+        public static List<Users> CreateStaff(Guid userId, string username, string password)
+        {
+            List<Users> users = GetAll();
+            bool usernameExists = users.Any(x => x.Username == username);
+
+            if (usernameExists)
+            {
+                throw new Exception("Username already exists.");
+            }
+
+            users.Add(
+                new Users
+                {
+                    Username = username,
+                    PasswordHash = Utils.HashSecret(password),
+                    Role = Role.User,  // Set the role to User
+                    CreatedBy = userId
+                }
+            );
+            SaveAll(users);
+            return users;
+        }
+
     }
 }

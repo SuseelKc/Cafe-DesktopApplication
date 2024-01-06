@@ -7,8 +7,7 @@
     @if (_globalState.CurrentUser != null)
     {
         <div class="sidebar">
-            <NavMenu />
-          @*   <NavMenu Username="@_globalState.CurrentUser.Username" UserRole="@_globalState.CurrentUser.Role" LogoutHandler="LogoutHandler" /> *@
+            <NavMenu UserRole="@_globalState.CurrentUser.Role" />
         </div>
     }
 
@@ -30,17 +29,19 @@
 </div>
 @code {
 
+    private Role userRole = Role.User;
     private GlobalState _globalState = new();
 
     protected override void OnInitialized()
     {
         UserService.SeedUsers();
-        // PDFService.SavePDF();
-    }
 
-    private void LogoutHandler()
-    {
-        _globalState.CurrentUser = null;
-        NavManager.NavigateTo("/login");
+        // Assuming you have a property to store the current user in _globalState
+        var currentUser = _globalState.CurrentUser;
+
+        if (currentUser != null)
+        {
+            userRole = currentUser.Role;
+        }
     }
 }

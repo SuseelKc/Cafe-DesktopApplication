@@ -5,7 +5,10 @@
 <form>
     <div>
         <h3>Create Bill</h3>
-        
+
+        <label>Name:</label>
+        <input type="text" />
+        <br><br>
         <!-- Coffee dropdown -->
         <label class="form-label">Coffee Name</label>
         <select class="form" @bind="selectedCoffeeId" @oninput="UpdateCoffeePrice">
@@ -15,7 +18,7 @@
                 <option value="@coffeeItem.Id">@coffeeItem.CoffeeName</option>
             }
         </select>
-        
+
         <!-- Display selected coffee price -->
         <label class="form-label">Price</label>
         <input value="@selectedCoffeePrice" readonly />
@@ -30,15 +33,51 @@
                 <option value="@addinItem.Id">@addinItem.Name</option>
             }
         </select>
-        
+
         <!-- Display selected addin price -->
         <label class="form-label">Price</label>
         <input value="@selectedAddinPrice" readonly />
         <br><br>
-
+        <!-- Quantity-->
+        <label class="form-label">Quantity</label>
+        <input type="number" />
         <button class="btn btn-primary" @onclick="Add">Add</button>
     </div>
 </form>
+<br>
+<br>
+<div class="d-flex justify-content-between">
+    <div><label>Name :</label><input type="text" readonly /></div>
+    <div><button class="btn btn-success">Generate PDF</button></div>
+</div>
+<br>
+<br>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Coffee</td>
+            <td>Addins</td>
+            <td>Price</td>
+            <td>Qty</td>
+            <td>Costs</td>
+            <td>Action</td>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+    </tbody>
+</table>
 
 @code {
     private List<CoffeeShop.Models.Addins> addin { get; set; }
@@ -59,22 +98,53 @@
 
     private void UpdateCoffeePrice(ChangeEventArgs args)
     {
-        var coffeeId = int.Parse(args.Value.ToString());
-        var selectedCoffee = coffee.FirstOrDefault(c => c.Id == coffeeId);
-        selectedCoffeePrice = selectedCoffee?.Price ?? 0;
+        var coffeeIdString = args.Value?.ToString();
+
+        // Check if coffeeIdString is not empty or null before parsing
+        if (!string.IsNullOrEmpty(coffeeIdString))
+        {
+            if (int.TryParse(coffeeIdString, out var coffeeId))
+            {
+                var selectedCoffee = coffee?.FirstOrDefault(c => c.Id == coffeeId);
+                selectedCoffeePrice = selectedCoffee?.Price ?? 0;
+            }
+            else
+            {           
+                Console.WriteLine("Invalid coffee ID format");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Coffee ID is empty or null");
+        }
     }
 
     private void UpdateAddinPrice(ChangeEventArgs args)
     {
-        var addinId = int.Parse(args.Value.ToString());
-        var selectedAddin = addin.FirstOrDefault(a => a.Id == addinId);
-        selectedAddinPrice = selectedAddin?.Price ?? 0;
+        var addinIdString = args.Value?.ToString();
+
+        // Check if addinIdString is not empty or null before parsing
+        if (!string.IsNullOrEmpty(addinIdString))
+        {
+            if (int.TryParse(addinIdString, out var addinId))
+            {
+                var selectedAddin = addin?.FirstOrDefault(a => a.Id == addinId);
+                selectedAddinPrice = selectedAddin?.Price ?? 0;
+            }
+            else
+            {
+               
+                Console.WriteLine("Invalid addin ID format");
+            }
+        }
+        else
+        {         
+            Console.WriteLine("Addin ID is empty or null");
+        }
     }
 
     private void Add()
     {
-        // Your logic to handle the selected coffee and addin Ids
-        // You can access the selectedCoffeeId and selectedAddinId variables here
-        // and perform any necessary actions.
+
     }
 }
