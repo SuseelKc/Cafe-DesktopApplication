@@ -127,13 +127,9 @@
         order = OrderService.GetAll();
     }
 
-
-
     private void UpdateCoffeePrice(ChangeEventArgs args)
     {
         var coffeeIdString = args.Value?.ToString();
-
-
 
         // Check if coffeeIdString is not empty or null before parsing
         if (!string.IsNullOrEmpty(coffeeIdString))
