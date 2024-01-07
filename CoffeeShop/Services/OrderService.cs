@@ -41,7 +41,7 @@ namespace CoffeeShop.Services
         }
 
         //adding the vlaue
-        public static List<Models.Order> AddOrder(int Id, string CustomerName,string CoffeeName, string AddinName,int CoffeePrice, int AddinPrice,int Qty,int TotalPrice)
+        public static List<Models.Order> AddOrder(int Id, string CustomerName,string Contact,string CoffeeName, string AddinName,int CoffeePrice, int AddinPrice,int Qty,int TotalPrice, DateTime DateTime)
         {
             List<Models.Order> order = GetAll(); // Retrieve the existing list
 
@@ -50,13 +50,14 @@ namespace CoffeeShop.Services
             {
                 Id = Id,
                 CustomerName = CustomerName,
-
+                Contact=Contact,
                 CoffeeName = CoffeeName,
                 AddinName= AddinName,
                 CoffeePrice= CoffeePrice,
                 AddinPrice= AddinPrice,
                 Qty= Qty,
-                TotalPrice= TotalPrice
+                TotalPrice= TotalPrice,
+                CreatedAt=DateTime
 
             };
 

@@ -87,6 +87,19 @@ namespace CoffeeShop.Services
             return Path.Combine(GetAppDirectoryPath(), "orders.json");
         }
 
+        //billsdetails
+        public static string GetBillDetailFilePath()
+        {
+            return Path.Combine(GetAppDirectoryPath(), "billdetails.json");
+        }
+
+
+        //billmaster
+        public static string GetBillMasterFilePath()
+        {
+            return Path.Combine(GetAppDirectoryPath(), "billmaster.json");
+        }
+
     }
 }
 

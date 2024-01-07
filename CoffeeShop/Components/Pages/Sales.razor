@@ -16,6 +16,27 @@
         {
             <input type="text" @bind="@orders.CustomerName" readonly />
         }
+        &ensp;
+        <label>Conact:</label>
+        @if (isContactEditable)
+        {
+            <input type="text" @bind="orders.Contact" />
+        }
+        else
+        {
+            <input type="text" @bind="@orders.Contact" readonly />
+        }
+
+        &ensp;
+        <label>Date:</label>
+        @if (isDateEditable)
+        {
+            <input type="date" @bind="orders.CreatedAt" />
+        }
+        else
+        {
+            <input type="date" @bind="@orders.CreatedAt" readonly />
+        }
 
         <br><br>
         <!-- Coffee dropdown -->
@@ -58,8 +79,7 @@
 <div class="d-flex justify-content-between">
     <div><label>Name :</label><input type="text" value="@AddedName" readonly /></div>
     <div><button class="btn btn-danger" @onclick="clearAll">Clear All</button></div>
-    <div><button class="btn btn-success">Generate Bill</button></div>
-    <div><button class="btn btn-primary">Generate PDF</button></div>
+    <div><button class="btn btn-success" @onclick="GenerateBill">Generate Bill</button></div>  
 </div>
 <br>
 <br>
@@ -106,8 +126,10 @@
     private List<CoffeeShop.Models.Addins> addin { get; set; }
     private List<CoffeeShop.Models.Coffee> coffee { get; set; }
     private List<CoffeeShop.Models.Order> order { get; set; }
+    private List<CoffeeShop.Models.BillDetail> billDetail { get; set; }
+    private List<CoffeeShop.Models.BillMaster> billMaster { get; set; }
     private CoffeeShop.Models.Order orders = new();
-    private decimal grandTotal = 0;
+    private int grandTotal = 0;
 
     private int selectedCoffeeId { get; set; }
     private int selectedAddinId { get; set; }
@@ -118,7 +140,8 @@
     private string AddedName = "";
 
     private bool isNameEditable = true;
-
+    private bool isContactEditable = true;
+    private bool isDateEditable = true;
     protected override void OnInitialized()
     {
         // Initialize your data
@@ -188,7 +211,14 @@
         {
             return;
         }
-
+        if (orders.Contact == null)
+        {
+            return;
+        }
+        if (orders.CreatedAt== null)
+        {
+            return;
+        }
 
         orders.Id = order.Count + 1;
 
@@ -227,10 +257,12 @@
             orders.TotalPrice = coffeePrice * orders.Qty;
         }
 
-        OrderService.AddOrder(orders.Id, orders.CustomerName, orders.CoffeeName, orders.AddinName, orders.CoffeePrice ?? 0, orders.AddinPrice ?? 0, orders.Qty, orders.TotalPrice);
+        OrderService.AddOrder(orders.Id, orders.CustomerName, orders.Contact, orders.CoffeeName, orders.AddinName, orders.CoffeePrice ?? 0, orders.AddinPrice ?? 0, orders.Qty, orders.TotalPrice,orders.CreatedAt);
         // Set the added name for display
         AddedName = orders.CustomerName;
         isNameEditable = false;
+        isContactEditable = false;
+        isDateEditable = false;
         order = OrderService.GetAll();
         CalculateGrandTotal();
     }
@@ -258,6 +290,8 @@
         selectedAddinPrice = 0;
         AddedName = "";
         isNameEditable = true;
+        isContactEditable = true;
+        isDateEditable = true;
         grandTotal = 0;
     }
 
@@ -265,4 +299,51 @@
     {
         grandTotal = order.Sum(item => item.TotalPrice);
     }
+
+
+    private void GenerateBill()
+    {
+
+        // Check if there are orders to generate a bill
+        if (order.Any())
+        {
+            // Add BillMaster
+            List<BillMaster> billMasters = BillMasterService.AddBillMaster(orders.Id, orders.CreatedAt, orders.CustomerName, orders.Contact, grandTotal);
+
+            // Retrieve the ID of the last added BillMaster
+            int billMasterId = billMasters.LastOrDefault()?.Id ?? 0;
+
+
+
+            // Add BillDetails for each order
+            foreach (var orderItem in order)
+            {
+                orderItem.Id = order.Count + 1;
+                BillDetailService.AddBillDetail(orderItem.Id, billMasterId, orderItem.CoffeeName, orderItem.AddinName, orderItem.CoffeePrice ?? 0, orderItem.AddinPrice ?? 0, orderItem.TotalPrice);
+                
+            }
+
+            // Clear orders after generating the bill
+            OrderService.ClearAllOrders();
+
+            // Reset form fields
+            orders = new CoffeeShop.Models.Order();
+            selectedCoffeeId = 0;
+            selectedAddinId = 0;
+            selectedCoffeePrice = 0;
+            selectedAddinPrice = 0;
+            AddedName = "";
+            isNameEditable = true;
+            isContactEditable = true;
+            isDateEditable = true;
+            grandTotal = 0;
+        }
+        else
+        {
+            // Show a message or take appropriate action when there are no orders to generate a bill
+            Console.WriteLine("No orders to generate a bill.");
+        }
+    }
+
+
 }

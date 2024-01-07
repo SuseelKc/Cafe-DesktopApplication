@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CoffeeShop.Models
 {
-    public class Order
+
+    public class BillDetail
     {
         public int Id { get; set; }
+        
+        public int BillMasterId { get; set; }
 
-        public string CustomerName { get; set; }
-
-        public string Contact { get; set; }
         public string CoffeeName { get; set; }
         public string? AddinName { get; set; }
 
@@ -21,15 +22,9 @@ namespace CoffeeShop.Models
 
         public int? AddinPrice { get; set; }
 
-        public int Qty { get; set; }
         public int TotalPrice { get; set; }
 
-        public DateTime CreatedAt { get; set; } 
 
     }
 
-
 }
-
-
-
