@@ -129,7 +129,6 @@
     private List<CoffeeShop.Models.BillDetail> billDetail { get; set; }
     private List<CoffeeShop.Models.BillMaster> billMaster { get; set; }
 
-
     private CoffeeShop.Models.Order orders = new();
     private int grandTotal = 0;
 
@@ -323,7 +322,7 @@
             foreach (var orderItem in order)
             {
                 int billDetailId = billDetail.Count + 1;
-                BillDetailService.AddBillDetail(billDetailId, billMasterId, orderItem.CoffeeName, orderItem.AddinName, orderItem.CoffeePrice ?? 0, orderItem.AddinPrice ?? 0, orderItem.TotalPrice);
+                BillDetailService.AddBillDetail(billDetailId, billMasterId, orderItem.CoffeeName, orderItem.AddinName, orderItem.CoffeePrice ?? 0, orderItem.AddinPrice ?? 0, orderItem.Qty,orderItem.TotalPrice);
 
             }
 

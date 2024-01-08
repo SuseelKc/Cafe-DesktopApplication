@@ -38,7 +38,7 @@ namespace CoffeeShop.Services
         }
 
         //adding the vlaue
-        public static List<BillDetail> AddBillDetail(int Id, int BillMasterId, string CoffeeName, string AddinName, int CoffeePrice, int AddinPrice, int TotalPrice)
+        public static List<BillDetail> AddBillDetail(int Id, int BillMasterId, string CoffeeName, string AddinName, int CoffeePrice, int AddinPrice,int Qty ,int TotalPrice)
         {
             List<BillDetail> billDetail = GetAll(); // Retrieve the existing list
 
@@ -51,6 +51,7 @@ namespace CoffeeShop.Services
                 AddinName = AddinName,
                 CoffeePrice = CoffeePrice,
                 AddinPrice = AddinPrice,
+                Qty = Qty,
                 TotalPrice = TotalPrice
 
             };

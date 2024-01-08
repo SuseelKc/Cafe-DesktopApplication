@@ -22,6 +22,8 @@ namespace CoffeeShop.Models
 
         public int? AddinPrice { get; set; }
 
+        public int Qty { get; set; }
+
         public int TotalPrice { get; set; }
 
 
