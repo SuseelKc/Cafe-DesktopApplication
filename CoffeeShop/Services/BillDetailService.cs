@@ -63,40 +63,7 @@ namespace CoffeeShop.Services
 
         }
 
-        //public static List<BillDetail> DeleteOrder(int Id)
-        //{
-
-        //    List<BillDetail> Bill = GetAll();
-        //    var orderToDelete = order.FirstOrDefault(c => c.Id == Id);
-
-        //    if (orderToDelete != null)
-        //    {
-        //        order.Remove(orderToDelete);
-        //        SaveAll(order);
-
-        //    }
-
-        //    return order;
-
-        //}
-
-        //public static void ClearAllOrders()
-
-        //{
-
-        //    List<BillDetail> orders = GetAll();
-
-
-        //    if (orders != null)
-        //    {
-        //        orders.Clear(); // Clear method to removing all items from the collection
-        //        SaveAll(orders);
-
-        //    }
-
-
-
-        //}
+     
 
     }
 }

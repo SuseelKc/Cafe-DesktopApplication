@@ -128,7 +128,7 @@
     private List<CoffeeShop.Models.Order> order { get; set; }
     private List<CoffeeShop.Models.BillDetail> billDetail { get; set; }
     private List<CoffeeShop.Models.BillMaster> billMaster { get; set; }
-    
+
 
     private CoffeeShop.Models.Order orders = new();
     private int grandTotal = 0;
@@ -312,25 +312,20 @@
         // Check if there are orders to generate a bill
         if (order.Any())
         {
-
-           int billMastersID = billMaster.Count + 1;
+            int billMastersID = billMaster.Count + 1;
             // Add BillMaster
             List<BillMaster> billMasters = BillMasterService.AddBillMaster(billMastersID, orders.CreatedAt, orders.CustomerName, orders.Contact, grandTotal);
 
             // Retrieve the ID of the last added BillMaster
             int billMasterId = billMasters.LastOrDefault()?.Id ?? 0;
 
-
-
             // Add BillDetails for each order
             foreach (var orderItem in order)
             {
-                int billDetailid = billDetail.Count + 1;
-                BillDetailService.AddBillDetail(billDetailid, billMasterId, orderItem.CoffeeName, orderItem.AddinName, orderItem.CoffeePrice ?? 0, orderItem.AddinPrice ?? 0, orderItem.TotalPrice);
-                
-            }
+                int billDetailId = billDetail.Count + 1;
+                BillDetailService.AddBillDetail(billDetailId, billMasterId, orderItem.CoffeeName, orderItem.AddinName, orderItem.CoffeePrice ?? 0, orderItem.AddinPrice ?? 0, orderItem.TotalPrice);
 
-            
+            }
 
             // Reset form fields
             orders = new CoffeeShop.Models.Order();
@@ -349,11 +344,11 @@
             // Show a message or take appropriate action when there are no orders to generate a bill
             Console.WriteLine("No orders to generate a bill.");
         }
-
+   
 
         // Clear orders after generating the bill
         OrderService.ClearAllOrders();
-        order = OrderService.GetAll();
+        order = OrderService.GetAll();      
     }
 
 
