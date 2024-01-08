@@ -1,5 +1,10 @@
 ﻿@page "/addins"
 @using CoffeeShop.Models
+@using QuestPDF.Fluent;
+@using QuestPDF.Fluent;
+@using QuestPDF.Helpers;
+@using QuestPDF.Infrastructure;
+
 <h3>Addins</h3>
 
 
@@ -14,6 +19,7 @@
         <input type="number" class="form" id="price" @bind="addins.Price" />
         <!-- ... -->
         <button class="btn btn-primary" @onclick="Add">Save</button>
+        <div class="d-flex justify-content-end"><button class="btn btn-success" @onclick="SavePDF">Generate PDF</button></div>
     </div>
 </EditForm>
 <br>
@@ -70,6 +76,69 @@
     {
         AddinService.DeleteAddins(Id);
         addin = AddinService.GetAll();
+    }
+
+    private void SavePDF()
+    {
+        
+
+        if (addin != null)
+        {
+
+            var appPath = Utils.GetAppDirectoryPath();
+            Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(1, Unit.Centimetre);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(15));
+
+                    page.Header().Text("Bislerium café -- Addins Availables ");
+
+
+                    page.Content().Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+
+                        });
+
+                        table.Header(header =>
+                        {
+                            header.Cell().Text("SNo.");
+                            header.Cell().Text("Addins");
+
+                            header.Cell().Text("Price");
+
+                        });
+
+                        int index = 1;
+                        foreach (var item in addin)
+                        {
+                            table.Cell().Text(index.ToString());
+                            table.Cell().Text(item.Name);
+
+                            table.Cell().Text(item.Price.ToString());
+                            index++;
+                        }
+
+
+                    });
+
+                    page.Footer().Text(text =>
+                    {
+                        text.Span("Page :");
+                        text.CurrentPageNumber();
+                    });
+                });
+            }).GeneratePdf(Path.Combine(appPath, "Addins.pdf"));
+
+        }
     }
 
 }
