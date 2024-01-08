@@ -95,8 +95,9 @@
             if (_globalState.CurrentUser != null)
             {
                 // NavigationManager.NavigateTo("/home");
-                NavigationManager.NavigateTo(_globalState.CurrentUser.HasInitialPassword ? "/change-password" : "/");
+                NavigationManager.NavigateTo(_globalState.CurrentUser.HasInitialPassword ? "/change-password" : "/home");
             }
+
         }
         catch (Exception e)
         {
@@ -104,23 +105,4 @@
             Console.WriteLine(e);
         }
     }
-
-    // private void login()
-    // {
-    //     if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-    //     { 
-    //         return;
-    //     }
-        
-    //     if (AuthService.Login(username, password))
-    //     {
-    //         // Redirect to a secured page
-    //         AuthService.RedirectToPage(NavigationManager, "/home");
-    //     }
-    //     else
-    //     {
-    //         // Navigate to "/" when credentials are incorrect
-    //         NavigationManager.NavigateTo("/");
-    //     }
-    // }
 }
