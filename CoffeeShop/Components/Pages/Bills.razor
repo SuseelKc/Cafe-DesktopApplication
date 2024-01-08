@@ -1,0 +1,50 @@
+﻿@page "/bills"
+
+<h3>Sales</h3>
+
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <td>Id</td>
+            <td>Date</td>
+            <td>UserName</td>
+            <td>Contact</td>
+            <td>Totaal Amount</td>
+            
+            <td>Action</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in billmaster)
+        {
+            <tr>
+
+                <td>@item.Id</td>
+                <td>@item.CreatedAt</td>
+                <td>@item.CustomerName</td>
+                <td>@item.Contact</td>
+                <td>@item.TotalPrice</td>             
+                <td>
+                  
+                       @*  <button class="btn btn-danger" @onclick="() => Delete(item.Id)">Delete</button> *@
+                   
+                </td>
+
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@code {
+    private List<CoffeeShop.Models.BillMaster> billmaster { get; set; }
+
+    protected override void OnInitialized()
+    {
+        billmaster = BillMasterService.GetAll();
+    }
+
+}

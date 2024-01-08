@@ -128,6 +128,8 @@
     private List<CoffeeShop.Models.Order> order { get; set; }
     private List<CoffeeShop.Models.BillDetail> billDetail { get; set; }
     private List<CoffeeShop.Models.BillMaster> billMaster { get; set; }
+    
+
     private CoffeeShop.Models.Order orders = new();
     private int grandTotal = 0;
 
@@ -148,6 +150,7 @@
         addin = AddinService.GetAll();
         coffee = CoffeeService.GetAll();
         order = OrderService.GetAll();
+
     }
 
     private void UpdateCoffeePrice(ChangeEventArgs args)
@@ -303,12 +306,16 @@
 
     private void GenerateBill()
     {
+        billMaster = BillMasterService.GetAll();
+        billDetail = BillDetailService.GetAll();
 
         // Check if there are orders to generate a bill
         if (order.Any())
         {
+
+           int billMastersID = billMaster.Count + 1;
             // Add BillMaster
-            List<BillMaster> billMasters = BillMasterService.AddBillMaster(orders.Id, orders.CreatedAt, orders.CustomerName, orders.Contact, grandTotal);
+            List<BillMaster> billMasters = BillMasterService.AddBillMaster(billMastersID, orders.CreatedAt, orders.CustomerName, orders.Contact, grandTotal);
 
             // Retrieve the ID of the last added BillMaster
             int billMasterId = billMasters.LastOrDefault()?.Id ?? 0;
@@ -318,13 +325,12 @@
             // Add BillDetails for each order
             foreach (var orderItem in order)
             {
-                orderItem.Id = order.Count + 1;
-                BillDetailService.AddBillDetail(orderItem.Id, billMasterId, orderItem.CoffeeName, orderItem.AddinName, orderItem.CoffeePrice ?? 0, orderItem.AddinPrice ?? 0, orderItem.TotalPrice);
+                int billDetailid = billDetail.Count + 1;
+                BillDetailService.AddBillDetail(billDetailid, billMasterId, orderItem.CoffeeName, orderItem.AddinName, orderItem.CoffeePrice ?? 0, orderItem.AddinPrice ?? 0, orderItem.TotalPrice);
                 
             }
 
-            // Clear orders after generating the bill
-            OrderService.ClearAllOrders();
+            
 
             // Reset form fields
             orders = new CoffeeShop.Models.Order();
@@ -343,6 +349,11 @@
             // Show a message or take appropriate action when there are no orders to generate a bill
             Console.WriteLine("No orders to generate a bill.");
         }
+
+
+        // Clear orders after generating the bill
+        OrderService.ClearAllOrders();
+        order = OrderService.GetAll();
     }
 
 
