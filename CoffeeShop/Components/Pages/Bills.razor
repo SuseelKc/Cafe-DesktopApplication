@@ -4,9 +4,14 @@
 @using QuestPDF.Helpers;
 @using QuestPDF.Infrastructure;
 
+
 <h3>Sales</h3>
+<div><label>From Date:</label><input type="date" @bind="fromDate" /> <label>   To Date:</label><input type="date" @bind="toDate" /> <button class="btn btn-success" @onclick="(e) => PrintRange(fromDate, toDate)">Generate PDF</button></div>
 
 
+
+<div style="text-align: right;"><button class="btn btn-success" @onclick="SaveAllPDF">All PDF</button></div>
+<br>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -30,8 +35,8 @@
                 <td>@item.Contact</td>
                 <td>@item.TotalPrice</td>             
                 <td>
-                  
-                        <button class="btn btn-primary" @onclick="() => Print(item.Id)">PDF</button>
+
+                    <button class="btn btn-success" @onclick="() => Print(item.Id)">PDF</button>
                    
                 </td>
 
@@ -46,6 +51,8 @@
 @code {
     private List<CoffeeShop.Models.BillMaster> billMaster { get; set; }
     private List<CoffeeShop.Models.BillDetail> billDetail { get; set; }
+    private DateTime fromDate;
+    private DateTime toDate;
 
     protected override void OnInitialized()
     {
@@ -53,6 +60,13 @@
         billDetail = BillDetailService.GetAll();
 
     }
+
+    private async Task GeneratePdf(DateTime fromDate, DateTime toDate)
+    {
+        // Call the Print method with the specified date range
+        PrintRange(fromDate, toDate);
+    }
+
 
     private void Print(int id)
     {
@@ -129,53 +143,6 @@
                         }
                         );
 
-                        // Customer details
-                        // page.Content().Text(text =>
-                        // {
-                        //     text.Line($"Customer Name: {billMasterToPrint.CustomerName}");
-                        //     text.Line($"Contact: {billMasterToPrint.Contact}");
-                        // });
-
-                        // page.Content().Table(table =>
-                        // {
-                        //     table.ColumnsDefinition(columns =>
-                        //     {
-                        //         columns.RelativeColumn();
-                        //         columns.RelativeColumn();
-                        //         columns.RelativeColumn();
-                        //         columns.RelativeColumn();
-                        //         columns.RelativeColumn();
-                        //         columns.RelativeColumn();
-                        //         columns.RelativeColumn();
-                        //     });
-
-                        //     table.Header(header =>
-                        //     {
-                        //         header.Cell().Text("Id");
-                        //         header.Cell().Text("Coffee");
-                        //         header.Cell().Text("Addins");
-                        //         header.Cell().Text("Coffee Price");
-                        //         header.Cell().Text("Addins Price");
-                        //         header.Cell().Text("Qty");
-                        //         header.Cell().Text("Total");
-                        //     });
-
-                        //     int index = 1;
-                        //     foreach (var item in detailsToPrint)
-                        //     {
-                        //         table.Cell().Text(index.ToString());
-                        //         table.Cell().Text(item.CoffeeName);
-                        //         table.Cell().Text(item.AddinName);
-                        //         table.Cell().Text(item.CoffeePrice.ToString());
-                        //         table.Cell().Text(item.AddinPrice.ToString());
-                        //         table.Cell().Text(item.Qty.ToString());
-                        //         table.Cell().Text(item.TotalPrice.ToString());
-                        //         index++;
-                        //     }
-
-                        //     // Grand total row
-                        //     table.Cell().ColumnSpan(6).AlignRight().Text($"Grand Total:   {billMasterToPrint.TotalPrice.ToString()}");
-                        // });
 
                         page.Footer().Text(text =>
                         {
@@ -185,6 +152,140 @@
                     });
                 }).GeneratePdf(Path.Combine(appPath, $"Bill-{billMasterToPrint.Id}.pdf"));
             }
+        }
+    }
+
+
+    private void SaveAllPDF()
+    {
+
+        if (billMaster != null)
+        {
+
+            var appPath = Utils.GetAppDirectoryPath();
+            Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(1, Unit.Centimetre);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(15));
+
+                    page.Header().Text("Bislerium café -- Total Sales Report ");
+
+
+                    page.Content().Table(table =>
+                    {
+                        table.ColumnsDefinition(columns =>
+                        {
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                            columns.RelativeColumn();
+                        });
+
+                        table.Header(header =>
+                        {
+                            header.Cell().Text("SNo.");
+                            header.Cell().Text("Sales Date");
+                            header.Cell().Text("Customer Name");
+                            header.Cell().Text("Contact");
+                            header.Cell().Text("Total Sales");
+                        });
+
+                        int index = 1;
+                        foreach (var item in billMaster)
+                        {
+                            table.Cell().Text(index.ToString());
+                            table.Cell().Text(item.CreatedAt.ToString());
+                            table.Cell().Text(item.CustomerName);
+                            table.Cell().Text(item.Contact);
+                            table.Cell().Text(item.TotalPrice.ToString());
+                            index++;
+                        }
+
+
+                    });
+
+                    page.Footer().Text(text =>
+                    {
+                        text.Span("Page :");
+                        text.CurrentPageNumber();
+                    });
+                });
+            }).GeneratePdf(Path.Combine(appPath, "Coffee Sales.pdf"));
+
+        }
+    }
+
+    private void PrintRange(DateTime fromDate, DateTime toDate)
+    {
+        // Find the bill master with the specified id and within the date range
+        var billMastersToPrint = billMaster
+        .Where(b => b.CreatedAt >= fromDate && b.CreatedAt <= toDate)
+        .ToList();
+
+        if (billMastersToPrint != null)
+        {
+            var appPath = Utils.GetAppDirectoryPath();
+
+            string formattedFromDate = fromDate.ToString("yyyy-MM-dd");
+            string formattedToDate = toDate.ToString("yyyy-MM-dd");
+            Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(1, Unit.Centimetre);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(15));
+
+                    page.Header().Text($"Bislerium café-- From  Date :{formattedFromDate}- To Date:{formattedToDate}");
+
+                    page.Content().Table(table =>
+               {
+                   table.ColumnsDefinition(columns =>
+                   {
+                       columns.RelativeColumn();
+                       columns.RelativeColumn();
+                       columns.RelativeColumn();
+                       columns.RelativeColumn();
+                       columns.RelativeColumn();
+                   });
+
+                   table.Header(header =>
+                   {
+                       header.Cell().Text("SNo.");
+                       header.Cell().Text("Sales Date");
+                       header.Cell().Text("Customer ");
+                       header.Cell().Text("Contact");
+                       header.Cell().Text("Total Sales");
+                   });
+
+                   int index = 1;
+                   foreach (var item in billMastersToPrint)
+                   {
+                       table.Cell().Text(index.ToString());
+                       table.Cell().Text(item.CreatedAt.ToString());
+                       table.Cell().Text(item.CustomerName);
+                       table.Cell().Text(item.Contact);
+                       table.Cell().Text(item.TotalPrice.ToString());
+                       index++;
+                   }
+
+
+               });
+
+                    page.Footer().Text(text =>
+             {
+                 text.Span("Page :");
+                 text.CurrentPageNumber();
+             });
+                });
+            }).
+                GeneratePdf(Path.Combine(appPath, $"Bill-{formattedFromDate}-{formattedToDate}.pdf"));
         }
     }
 
