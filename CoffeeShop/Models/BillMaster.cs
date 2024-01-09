@@ -17,7 +17,7 @@ namespace CoffeeShop.Models
 
         public string Contact { get; set; }
 
-        public int TotalPrice { get; set; }
+        public double TotalPrice { get; set; }
 
 
 

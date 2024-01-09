@@ -1,5 +1,9 @@
 ﻿@page "/sales"
 @inject NavigationManager Navigation
+@using System
+@using System.Collections.Generic;
+@using System.Linq;
+
 
 <h3>Sales</h3>
 
@@ -113,12 +117,29 @@
                 </td>           
         </tr>
         }
+        @if (complementaryDrink)
+        {
+            <tr colspan="6"><strong>
+                <h4>Free Complementary Drink ;)</h4>
+                    </strong><br>
+                Customer already made 10 purchases
+            </tr>
+        }
+        @if(getDiscount){
+        <tr>
+            <td colspan="6"><strong>Grand Total (10% off):</strong></td>
+            <td><strong>@grandTotal</strong></td>
+
+            <td></td>
+        </tr>
+        }
+        else{
         <tr>
             <td colspan="6"><strong>Grand Total:</strong></td>
             <td><strong>@grandTotal</strong></td>
             <td></td>
         </tr>
-
+        }
     </tbody>
 </table>
 
@@ -129,8 +150,13 @@
     private List<CoffeeShop.Models.BillDetail> billDetail { get; set; }
     private List<CoffeeShop.Models.BillMaster> billMaster { get; set; }
 
-    private CoffeeShop.Models.Order orders = new();
-    private int grandTotal = 0;
+
+    private CoffeeShop.Models.Order orders = new CoffeeShop.Models.Order
+        {
+            CreatedAt = DateTime.Now.Date
+        };
+    // private int grandTotal = 0;
+    private double grandTotal = 0;
 
     private int selectedCoffeeId { get; set; }
     private int selectedAddinId { get; set; }
@@ -143,6 +169,8 @@
     private bool isNameEditable = true;
     private bool isContactEditable = true;
     private bool isDateEditable = true;
+    private bool complementaryDrink = false;
+    private bool getDiscount = false;
     protected override void OnInitialized()
     {
         // Initialize your data
@@ -260,6 +288,29 @@
         }
 
         OrderService.AddOrder(orders.Id, orders.CustomerName, orders.Contact, orders.CoffeeName, orders.AddinName, orders.CoffeePrice ?? 0, orders.AddinPrice ?? 0, orders.Qty, orders.TotalPrice,orders.CreatedAt);
+
+        //Counting for Complementaary drink
+        string contactNumber = orders.Contact;
+        int count = BillMasterService.CountByContact(contactNumber);
+
+        if (count%10 ==0)
+        {
+            complementaryDrink = true;
+        }
+
+        //  current date
+        DateTime currentDate = DateTime.Now.Date;
+
+        //  date range upto the last 30 days
+        DateTime startDate = currentDate.AddDays(-30);
+
+        int consecutiveDateCount = BillMasterService.CountConsecutiveByContact(contactNumber, startDate, currentDate);
+        if (consecutiveDateCount >= 30)
+        {
+            getDiscount = true;
+        }
+
+
         // Set the added name for display
         AddedName = orders.CustomerName;
         isNameEditable = false;
@@ -280,7 +331,7 @@
 
     private void clearAll()
     {
-
+        complementaryDrink = false;
         OrderService.ClearAllOrders();
         order = OrderService.GetAll();
 
@@ -294,6 +345,7 @@
         isNameEditable = true;
         isContactEditable = true;
         isDateEditable = true;
+
         grandTotal = 0;
     }
 
@@ -311,6 +363,12 @@
         // Check if there are orders to generate a bill
         if (order.Any())
         {
+            //as the customer gets 10%discounts for regularpurchase
+            @if (getDiscount)
+            {
+                grandTotal -= grandTotal * 0.1;
+            }
+
             int billMastersID = billMaster.Count + 1;
             // Add BillMaster
             List<BillMaster> billMasters = BillMasterService.AddBillMaster(billMastersID, orders.CreatedAt, orders.CustomerName, orders.Contact, grandTotal);
@@ -336,6 +394,7 @@
             isNameEditable = true;
             isContactEditable = true;
             isDateEditable = true;
+            complementaryDrink = false;
             grandTotal = 0;
         }
         else
@@ -343,11 +402,12 @@
             // Show a message or take appropriate action when there are no orders to generate a bill
             Console.WriteLine("No orders to generate a bill.");
         }
-   
+
 
         // Clear orders after generating the bill
         OrderService.ClearAllOrders();
-        order = OrderService.GetAll();      
+        order = OrderService.GetAll();
+        Navigation.NavigateTo("/sales");
     }
 
 

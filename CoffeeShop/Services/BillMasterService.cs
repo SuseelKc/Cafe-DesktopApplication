@@ -24,6 +24,7 @@ namespace CoffeeShop.Services
             File.WriteAllText(appUsersFilePath, json);
         }
 
+
         //getting back the saved value
         public static List<BillMaster> GetAll()
         {
@@ -36,9 +37,47 @@ namespace CoffeeShop.Services
             var json = File.ReadAllText(appUsersFilePath);
             return JsonSerializer.Deserialize<List<BillMaster>>(json);
         }
+        
+        //find through contact where how many order is made by the specific customer 
+        public static int CountByContact(string contactNumber)
+        {
+            var billMasters = GetAll();
+            return billMasters.Count(bill => bill.Contact == contactNumber);
+        }
+
+        //count the contact according to the 30 days consistency 
+        public static int CountConsecutiveByContact(string contactNumber, DateTime startDate, DateTime endDate)
+        {
+            var billMasters = GetAll();
+
+            int consecutiveCount = 0;
+            int currentConsecutiveCount = 0;
+            DateTime currentDate = startDate;
+
+            while (currentDate <= endDate)
+            {
+                bool isDatePresent = billMasters.Any(bill => bill.Contact == contactNumber && bill.CreatedAt.Date == currentDate.Date);
+
+                if (isDatePresent)
+                {
+                    currentConsecutiveCount++;
+                }
+                else
+                {
+                    consecutiveCount = Math.Max(consecutiveCount, currentConsecutiveCount);
+                    currentConsecutiveCount = 0;
+                }
+
+                currentDate = currentDate.AddDays(1);
+            }
+
+            return consecutiveCount;
+        }
+
+
 
         //adding the vlaue
-        public static List<BillMaster> AddBillMaster(int Id, DateTime CreatedAt, string Customername, string Contact, int TotalPrice)
+        public static List<BillMaster> AddBillMaster(int Id, DateTime CreatedAt, string Customername, string Contact, double TotalPrice)
         {
             List<BillMaster> billMaster = GetAll(); // Retrieve the existing list
 
