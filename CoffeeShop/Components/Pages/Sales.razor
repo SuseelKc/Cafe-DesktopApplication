@@ -293,7 +293,7 @@
         string contactNumber = orders.Contact;
         int count = BillMasterService.CountByContact(contactNumber);
 
-        if (count%10 ==0)
+        if (count%10 ==0 && count != 0)
         {
             complementaryDrink = true;
         }
@@ -309,6 +309,7 @@
         {
             getDiscount = true;
         }
+
 
 
         // Set the added name for display
