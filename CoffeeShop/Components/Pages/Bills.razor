@@ -53,7 +53,7 @@
         billDetail = BillDetailService.GetAll();
 
     }
-  
+
     private void Print(int id)
     {
         // Find the bill master with the specified id
@@ -78,14 +78,15 @@
 
                         page.Header().Text("Bislerium café ");
 
-                        // Customer details
-                        page.Content().Text(text =>
+                        page.Content().Column(column =>
                         {
+                            column.Item().Text(text =>
+                            {
                             text.Line($"Customer Name: {billMasterToPrint.CustomerName}");
                             text.Line($"Contact: {billMasterToPrint.Contact}");
-                        });
+                            });
 
-                        page.Content().Table(table =>
+                            column.Item().Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
                             {
@@ -125,6 +126,56 @@
                             // Grand total row
                             table.Cell().ColumnSpan(6).AlignRight().Text($"Grand Total:   {billMasterToPrint.TotalPrice.ToString()}");
                         });
+                        }
+                        );
+
+                        // Customer details
+                        // page.Content().Text(text =>
+                        // {
+                        //     text.Line($"Customer Name: {billMasterToPrint.CustomerName}");
+                        //     text.Line($"Contact: {billMasterToPrint.Contact}");
+                        // });
+
+                        // page.Content().Table(table =>
+                        // {
+                        //     table.ColumnsDefinition(columns =>
+                        //     {
+                        //         columns.RelativeColumn();
+                        //         columns.RelativeColumn();
+                        //         columns.RelativeColumn();
+                        //         columns.RelativeColumn();
+                        //         columns.RelativeColumn();
+                        //         columns.RelativeColumn();
+                        //         columns.RelativeColumn();
+                        //     });
+
+                        //     table.Header(header =>
+                        //     {
+                        //         header.Cell().Text("Id");
+                        //         header.Cell().Text("Coffee");
+                        //         header.Cell().Text("Addins");
+                        //         header.Cell().Text("Coffee Price");
+                        //         header.Cell().Text("Addins Price");
+                        //         header.Cell().Text("Qty");
+                        //         header.Cell().Text("Total");
+                        //     });
+
+                        //     int index = 1;
+                        //     foreach (var item in detailsToPrint)
+                        //     {
+                        //         table.Cell().Text(index.ToString());
+                        //         table.Cell().Text(item.CoffeeName);
+                        //         table.Cell().Text(item.AddinName);
+                        //         table.Cell().Text(item.CoffeePrice.ToString());
+                        //         table.Cell().Text(item.AddinPrice.ToString());
+                        //         table.Cell().Text(item.Qty.ToString());
+                        //         table.Cell().Text(item.TotalPrice.ToString());
+                        //         index++;
+                        //     }
+
+                        //     // Grand total row
+                        //     table.Cell().ColumnSpan(6).AlignRight().Text($"Grand Total:   {billMasterToPrint.TotalPrice.ToString()}");
+                        // });
 
                         page.Footer().Text(text =>
                         {
