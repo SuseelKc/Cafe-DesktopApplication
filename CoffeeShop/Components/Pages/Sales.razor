@@ -95,16 +95,15 @@
             <td>Addins</td>
             <td>CoffeePrice</td>
             <td>AddinsPrice</td>
-      
             <td>Qty</td>
             <td>Costs</td>
             <td>Action</td>
         </tr>
     </thead>
     <tbody>
-         @foreach(var items in order)
-            {
-        <tr>           
+        @foreach (var items in order)
+        {
+            <tr>
                 <td>@items.Id</td>
                 <td>@items.CoffeeName</td>
                 <td>@items.AddinName</td>
@@ -114,31 +113,43 @@
                 <td>@items.TotalPrice</td>
                 <td>
                     <button class="btn btn-danger" @onclick="() => Delete(items.Id)">Delete</button>
-                </td>           
-        </tr>
-        }
-        @if (complementaryDrink)
-        {
-            <tr colspan="6"><strong>
-                <h4>Free Complementary Drink ;)</h4>
-                    </strong><br>
-                Customer already made 10 purchases
+                </td>
             </tr>
         }
-        @if(getDiscount){
-        <tr>
-            <td colspan="6"><strong>Grand Total (10% off):</strong></td>
-            <td><strong>@grandTotal</strong></td>
 
-            <td></td>
-        </tr>
+        @if (complementaryDrink)
+        {
+            <tr>
+                <td colspan="5">
+                    <strong>
+                        <h4>Free Complementary Drink ;)</h4>
+                    </strong>
+                    <br />
+                    Customer already made 10 purchases
+                </td>
+                <td>1</td>
+                <td>0</td>
+                <td></td>
+            </tr>
+            
+            <tr></tr> <!-- If you want an empty row after the complementary drink message -->
         }
-        else{
-        <tr>
-            <td colspan="6"><strong>Grand Total:</strong></td>
-            <td><strong>@grandTotal</strong></td>
-            <td></td>
-        </tr>
+
+        @if (getDiscount == true)
+        {
+            <tr>
+                <td colspan="6"><strong>Grand Total (10% off):</strong></td>
+                <td><strong>@grandTotal</strong></td>
+                <td></td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="6"><strong>Grand Total:</strong></td>
+                <td><strong>@grandTotal</strong></td>
+                <td></td>
+            </tr>
         }
     </tbody>
 </table>
@@ -298,17 +309,20 @@
             complementaryDrink = true;
         }
 
-        //  current date
+        // Current date
         DateTime currentDate = DateTime.Now.Date;
 
-        //  date range upto the last 30 days
-        DateTime startDate = currentDate.AddDays(-30);
+        // Date range up to the last 2 days
+        DateTime startDate = currentDate.AddDays(-2);
 
         int consecutiveDateCount = BillMasterService.CountConsecutiveByContact(contactNumber, startDate, currentDate);
-        if (consecutiveDateCount >= 30)
+
+        // Check for consecutive purchases for the last 2 days
+        if (consecutiveDateCount >= 2)
         {
             getDiscount = true;
         }
+
 
 
 
@@ -365,7 +379,7 @@
         if (order.Any())
         {
             //as the customer gets 10%discounts for regularpurchase
-            @if (getDiscount)
+            @if (getDiscount==true)
             {
                 grandTotal -= grandTotal * 0.1;
             }

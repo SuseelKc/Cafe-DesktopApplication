@@ -11,9 +11,7 @@
         </div>
     }
 
-    @* <div class="sidebar">
-        <NavMenu />
-    </div> *@
+
 
     <main>
         <div class="top-row px-4">
@@ -36,7 +34,7 @@
     {
         UserService.SeedUsers();
 
-        // Assuming you have a property to store the current user in _globalState
+   
         var currentUser = _globalState.CurrentUser;
 
         if (currentUser != null)

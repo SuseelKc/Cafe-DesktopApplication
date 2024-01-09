@@ -45,18 +45,17 @@ namespace CoffeeShop.Services
             return billMasters.Count(bill => bill.Contact == contactNumber);
         }
 
-        //count the contact according to the 30 days consistency 
         public static int CountConsecutiveByContact(string contactNumber, DateTime startDate, DateTime endDate)
         {
             var billMasters = GetAll();
 
             int consecutiveCount = 0;
             int currentConsecutiveCount = 0;
-            DateTime currentDate = startDate;
+            DateTime currentDate = startDate.Date;
 
-            while (currentDate <= endDate)
+            while (currentDate <= endDate.Date)
             {
-                bool isDatePresent = billMasters.Any(bill => bill.Contact == contactNumber && bill.CreatedAt.Date == currentDate.Date);
+                bool isDatePresent = billMasters.Any(bill => bill.Contact == contactNumber && bill.CreatedAt.Date == currentDate);
 
                 if (isDatePresent)
                 {
@@ -73,7 +72,6 @@ namespace CoffeeShop.Services
 
             return consecutiveCount;
         }
-
 
 
         //adding the vlaue
