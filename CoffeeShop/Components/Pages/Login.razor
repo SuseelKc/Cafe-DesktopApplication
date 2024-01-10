@@ -97,14 +97,14 @@
             _globalState.CurrentUser = UserService.Login(username, password);
             if (_globalState.CurrentUser != null)
             {
-                // NavigationManager.NavigateTo("/home");
+              
                 NavigationManager.NavigateTo(_globalState.CurrentUser.HasInitialPassword ? "/change-password" : "/home");
             }
 
         }
         catch (Exception e)
         {
-           _errorMessage = e.Message;
+            _errorMessage = "Invalid Username or Password";
             Console.WriteLine(e);
         }
     }
