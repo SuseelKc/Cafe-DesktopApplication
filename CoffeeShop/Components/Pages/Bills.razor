@@ -5,7 +5,8 @@
 @using QuestPDF.Infrastructure;
 
 
-<h3>Sales</h3>
+<strong><h1 class="text-left mb-4">Sales</h1></strong>
+
 <div class="row">
 <div><label>From Date:</label><input type="date" @bind="fromDate" /> <label>   To Date:</label><input type="date" @bind="toDate" /> <button class="btn btn-success" @onclick="(e) => PrintRange(fromDate, toDate)">Generate PDF</button></div>
 </div>

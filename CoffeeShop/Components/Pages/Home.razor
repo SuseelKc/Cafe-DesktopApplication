@@ -1,19 +1,226 @@
 ﻿@page "/home"
+<style>
+    .col-addins {
+        position: relative;
+        background-color: #FF6AC2;
+    }
 
-<h1>Hello, world!</h1>
+    .addins-box {
+        display: block;
+        text-decoration: none;
+    }
+
+        .addins-box:hover .addins {
+            background-color: #FF6AC2;
+        }
+
+        .addins-box:hover .box-content h2,
+        .addins-box:hover .box-content p {
+            color: white;
+        }
+
+    .addins {
+        transition: background-color 0.3s ease;
+    }
+
+
+    /* coffee */
+    .col-coffee {
+        position: relative;
+        background-color: #B19470;
+    }
+
+    .coffee-box {
+        display: block;
+        text-decoration: none;
+    }
+
+        .coffee-box:hover .coffee {
+            background-color: #B19470;
+        }
+
+        .coffee-box:hover .box-content h2,
+        .coffee-box:hover .box-content p {
+            color: white;
+        }
+
+    .coffee {
+        transition: background-color 0.3s ease;
+    }
+
+    .coffee-box:hover .coffee {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /*  */
+    /* sales */
+    .col-sales {
+        position: relative;
+        background-color: #A1EEBD;
+    }
+
+    .sales-box {
+        display: block;
+        text-decoration: none;
+    }
+
+        .sales-box:hover .sales {
+            background-color: #A1EEBD;
+        }
+
+        .sales-box:hover .box-content h2,
+        .sales-box:hover .box-content p {
+            color: white;
+        }
+
+    .sales {
+        transition: background-color 0.3s ease;
+    }
+
+    .sales-box:hover .sales {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /*  */
+
+    .box-content {
+        padding: 20px;
+    }
+
+        .box-content h2,
+        .box-content p {
+            margin: 0;
+        }
+
+    /* Additional styles for a more pronounced hover effect */
+    .addins-box:hover .addins {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+
+
+</style>
+<h1>Reports</h1>
 <br>
-Welcome to your new app.
 
-<Label>Total Revenue :</Label><input value="@totalSales"/>
+@* <Label>Total Revenue :</Label><input value="@totalSales"/> *@
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-lg-4 col-addins">
+            <a href="/addins" class="addins-box">
+                <div class="addins">
+                    <div class="box-content">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cup-straw" viewBox="0 0 16 16">
+                            <path d="M13.902.334a.5.5 0 0 1-.28.65l-2.254.902-.4 1.927c.376.095.715.215.972.367.228.135.56.396.56.82q0 .069-.011.132l-.962 9.068a1.28 1.28 0 0 1-.524.93c-.488.34-1.494.87-3.01.87s-2.522-.53-3.01-.87a1.28 1.28 0 0 1-.524-.93L3.51 5.132A1 1 0 0 1 3.5 5c0-.424.332-.685.56-.82.262-.154.607-.276.99-.372C5.824 3.614 6.867 3.5 8 3.5c.712 0 1.389.045 1.985.127l.464-2.215a.5.5 0 0 1 .303-.356l2.5-1a.5.5 0 0 1 .65.278M9.768 4.607A14 14 0 0 0 8 4.5c-1.076 0-2.033.11-2.707.278A3.3 3.3 0 0 0 4.645 5c.146.073.362.15.648.222C5.967 5.39 6.924 5.5 8 5.5c.571 0 1.109-.03 1.588-.085zm.292 1.756C9.445 6.45 8.742 6.5 8 6.5c-1.133 0-2.176-.114-2.95-.308a6 6 0 0 1-.435-.127l.838 8.03c.013.121.06.186.102.215.357.249 1.168.69 2.438.69s2.081-.441 2.438-.69c.042-.029.09-.094.102-.215l.852-8.03a6 6 0 0 1-.435.127 9 9 0 0 1-.89.17zM4.467 4.884s.003.002.005.006zm7.066 0-.005.006zM11.354 5a3 3 0 0 0-.604-.21l-.099.445.055-.013c.286-.072.502-.149.648-.222" />
+                        </svg>
+                        <h2>@AddinsCount</h2>
+                        <p>Total Addins</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-4 col-coffee">
+            <a href="/coffee" class="coffee-box">
+                <div class="coffee">
+                    <div class="box-content">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cup-hot-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M.5 6a.5.5 0 0 0-.488.608l1.652 7.434A2.5 2.5 0 0 0 4.104 16h5.792a2.5 2.5 0 0 0 2.44-1.958l.131-.59a3 3 0 0 0 1.3-5.854l.221-.99A.5.5 0 0 0 13.5 6zM13 12.5a2 2 0 0 1-.316-.025l.867-3.898A2.001 2.001 0 0 1 13 12.5" />
+                            <path d="m4.4.8-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 3.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 3.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 3 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 4.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.253.382l-.018.025-.005.008-.002.002A.5.5 0 0 1 6.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 6.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 6 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 7.4.8m3 0-.003.004-.014.019a4 4 0 0 0-.204.31 2 2 0 0 0-.141.267c-.026.06-.034.092-.037.103v.004a.6.6 0 0 0 .091.248c.075.133.178.272.308.445l.01.012c.118.158.26.347.37.543.112.2.22.455.22.745 0 .188-.065.368-.119.494a3 3 0 0 1-.202.388 5 5 0 0 1-.252.382l-.019.025-.005.008-.002.002A.5.5 0 0 1 9.6 4.2l.003-.004.014-.019a4 4 0 0 0 .204-.31 2 2 0 0 0 .141-.267c.026-.06.034-.092.037-.103a.6.6 0 0 0-.09-.252A4 4 0 0 0 9.6 2.8l-.01-.012a5 5 0 0 1-.37-.543A1.53 1.53 0 0 1 9 1.5c0-.188.065-.368.119-.494.059-.138.134-.274.202-.388a6 6 0 0 1 .253-.382l.025-.035A.5.5 0 0 1 10.4.8" />
+                        </svg>
+                        <h2>@CoffeeCount</h2>
+                        <p>Total Coffee</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-4 col-sales">
+            <a href="/bills" class="sales-box">
+                <div class="sales">
+                    <div class="box-content">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-coin" viewBox="0 0 16 16">
+                            <path d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z" />
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
+                        </svg>
+                        <h2>@totalSales</h2>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+
+    </div>
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h3 class="card-title">Best-Selling Coffees</h3>
+                        <ul class="list-group">
+                            @foreach (var coffee in topSellingCoffees)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @coffee.Name
+                                    <span class="badge bg-primary rounded-pill">Quantity Sold: @coffee.QuantitySold</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h3 class="card-title">Best-Selling Add-ins</h3>
+                        <ul class="list-group">
+                            @foreach (var addin in topSellingAddins)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @addin.Name
+                                    <span class="badge bg-primary rounded-pill">Quantity Sold: @addin.QuantitySold</span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
 
 @code{
     private List<CoffeeShop.Models.BillMaster> billMaster { get; set; }
+    private List<CoffeeShop.Models.BillDetail> billdetail { get; set; }
+    private List<CoffeeShop.Models.Addins> addins { get; set; }
+    private List<TopSellingItem> topSellingCoffees;
+    private List<TopSellingItem> topSellingAddins;
+
+
+    private List<CoffeeShop.Models.Coffee> coffee { get; set; }
     private double totalSales;
+    private double TotalSales;
+    private int AddinsCount;
+    private int CoffeeCount;
+    
 
     protected override void OnInitialized()
     {
+
         // Initialize your data
         billMaster = BillMasterService.GetAll();
+        addins = AddinService.GetAll();
+        coffee = CoffeeService.GetAll();
+        billdetail = BillDetailService.GetAll();
 
         totalSales = 0;
 
@@ -21,5 +228,40 @@ Welcome to your new app.
         {
             totalSales += item.TotalPrice;
         }
+
+        AddinsCount = addins.Count;
+        CoffeeCount = coffee.Count;
+
+
+        // for top selling coffee and addins
+        var billDetails = CoffeeShop.Services.BillDetailService.GetAll();
+
+        TotalSales = billDetails.Sum(b => b.TotalPrice);
+
+        topSellingCoffees = TopSellingService.GetTopSellingItems(billDetails, b => b.CoffeeName);
+        topSellingAddins = TopSellingService.GetTopSellingItems(billDetails, b => b.AddinName);
+
+
+
     }
+    // private List<TopSellingItem> GetTopSellingItems(List<BillDetail> billDetails, Func<BillDetail, string> selector)
+    // {
+    //     var topSellingItems = billDetails
+    //         .Where(b => !string.IsNullOrEmpty(selector(b)))
+    //         .GroupBy(selector)
+    //         .Select(g => new TopSellingItem
+    //             {
+    //                 Name = g.Key,
+    //                 QuantitySold = g.Sum(x => x.Qty)
+    //             })
+    //         .OrderByDescending(x => x.QuantitySold)
+    //         .Take(5)
+    //         .ToList();
+
+    //     return topSellingItems;
+    // }
+
+    
+
+
 }

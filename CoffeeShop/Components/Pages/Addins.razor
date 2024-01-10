@@ -41,10 +41,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in addin)
+                @for (int i=0; i<addin.Count; i++)
                 {
+                    var item = addin[i];
                     <tr>
-                        <td>@item.Id</td>
+                        <td>@(i+1)</td>
                         <td>@item.Name</td>
                         <td>@item.Price</td>
                         <td>
