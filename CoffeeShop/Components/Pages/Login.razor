@@ -61,7 +61,10 @@
     <label for="password">Password:</label>
     <input type="password" id="password" @bind-value="password" />
 
-    <br><br>
+    <br>
+    <p style="color: red; text-align: center;">@_errorMessage</p>
+    <br>
+
     <button type="submit">Login</button>
 </form>
 @code {

@@ -5,79 +5,106 @@
 @using System.Linq;
 
 
-<h3>Sales</h3>
+<strong><h1 class="text-left mb-4">Sales</h1></strong>
 
 <EditForm Model="@orders">
-    <div>
-        <h3>Create Bill</h3>
+    <div class="container mt-4">
+       @*  <div class="row mb-3">
+           
+        </div> *@
 
-        <label>Name:</label>
-        @if (isNameEditable)
-        {
-            <input type="text" @bind="orders.CustomerName" />
-        }
-        else
-        {
-            <input type="text" @bind="@orders.CustomerName" readonly />
-        }
-        &ensp;
-        <label>Conact:</label>
-        @if (isContactEditable)
-        {
-            <input type="text" @bind="orders.Contact" />
-        }
-        else
-        {
-            <input type="text" @bind="@orders.Contact" readonly />
-        }
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label class="form-label">Name:</label>
+                @if (isNameEditable)
+                {
+                    <input type="text" class="form-control" @bind="orders.CustomerName" />
+                }
+                else
+                {
+                    <input type="text" class="form-control" @bind="@orders.CustomerName" readonly />
+                }
+            </div>
 
-        &ensp;
-        <label>Date:</label>
-        @if (isDateEditable)
-        {
-            <input type="date" @bind="orders.CreatedAt" />
-        }
-        else
-        {
-            <input type="date" @bind="@orders.CreatedAt" readonly />
-        }
+            <div class="col-md-4">
+                <label class="form-label">Contact:</label>
+                @if (isContactEditable)
+                {
+                    <input type="text" class="form-control" @bind="orders.Contact" />
+                }
+                else
+                {
+                    <input type="text" class="form-control" @bind="@orders.Contact" readonly />
+                }
+            </div>
 
-        <br><br>
-        <!-- Coffee dropdown -->
-        <label class="form-label">Coffee Name</label>
-        <select class="form" @bind="selectedCoffeeId" @oninput="UpdateCoffeePrice" required>
-            <option value="">Select Coffee</option>
-            @foreach (var coffeeItem in coffee)
-            {
-                <option value="@coffeeItem.Id">@coffeeItem.CoffeeName</option>
-            }
-        </select>
+            <div class="col-md-4">
+                <label class="form-label">Date:</label>
+                @if (isDateEditable)
+                {
+                    <input type="date" class="form-control" @bind="orders.CreatedAt" />
+                }
+                else
+                {
+                    <input type="date" class="form-control" @bind="@orders.CreatedAt" readonly />
+                }
+            </div>
+        </div>
 
-        <!-- Display selected coffee price -->
-        <label class="form-label">Price</label>
-        <input value="@selectedCoffeePrice"  readonly />
-        <br><br>
+        <div class="row mb-3">
+            <!-- Coffee dropdown -->
+            <div class="col-md-6">
+                <label class="form-label">Coffee Name</label>
+                <select class="form-select" @bind="selectedCoffeeId" @oninput="UpdateCoffeePrice" required>
+                    <option value="">Select Coffee</option>
+                    @foreach (var coffeeItem in coffee)
+                    {
+                        <option value="@coffeeItem.Id">@coffeeItem.CoffeeName</option>
+                    }
+                </select>
+            </div>
 
-        <!-- Addins dropdown -->
-        <label class="form-label">Addins</label>
-        <select class="form" @bind="selectedAddinId" @oninput="UpdateAddinPrice">
-            <option value="">Select Addin</option>
-            @foreach (var addinItem in addin)
-            {
-                <option value="@addinItem.Id">@addinItem.Name</option>
-            }
-        </select>
+            <!-- Display selected coffee price -->
+            <div class="col-md-6">
+                <label class="form-label">Price</label>
+                <input class="form-control" value="@selectedCoffeePrice" readonly />
+            </div>
+        </div>
 
-        <!-- Display selected addin price -->
-        <label class="form-label">Price</label>
-        <input value="@selectedAddinPrice"   readonly />
-        <br><br>
-        <!-- Quantity-->
-        <label class="form-label">Quantity</label>
-        <input type="number" @bind="orders.Qty"  required/>
-        <button class="btn btn-primary"  @onclick="Add">Add</button>
+        <div class="row mb-3">
+            <!-- Addins dropdown -->
+            <div class="col-md-6">
+                <label class="form-label">Addins</label>
+                <select class="form-select" @bind="selectedAddinId" @oninput="UpdateAddinPrice">
+                    <option value="">Select Addin</option>
+                    @foreach (var addinItem in addin)
+                    {
+                        <option value="@addinItem.Id">@addinItem.Name</option>
+                    }
+                </select>
+            </div>
+
+            <!-- Display selected addin price -->
+            <div class="col-md-6">
+                <label class="form-label">Price</label>
+                <input class="form-control" value="@selectedAddinPrice" readonly />
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <!-- Quantity-->
+            <div class="col-md-6">
+                <label class="form-label">Quantity</label>
+                <input type="number" class="form-control" @bind="orders.Qty" required />
+            </div>
+
+            <div class="col-md-6 d-flex align-items-end">
+                <button class="btn btn-primary" @onclick="Add">Add</button>
+            </div>
+        </div>
     </div>
 </EditForm>
+
 <br>
 <br>
 <div class="d-flex justify-content-between">
@@ -86,73 +113,78 @@
     <div><button class="btn btn-success" @onclick="GenerateBill">Generate Bill</button></div>  
 </div>
 <br>
-<br>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <td>Id</td>
-            <td>Coffee</td>
-            <td>Addins</td>
-            <td>CoffeePrice</td>
-            <td>AddinsPrice</td>
-            <td>Qty</td>
-            <td>Costs</td>
-            <td>Action</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var items in order)
-        {
-            <tr>
-                <td>@items.Id</td>
-                <td>@items.CoffeeName</td>
-                <td>@items.AddinName</td>
-                <td>@items.CoffeePrice</td>
-                <td>@items.AddinPrice</td>
-                <td>@items.Qty</td>
-                <td>@items.TotalPrice</td>
-                <td>
-                    <button class="btn btn-danger" @onclick="() => Delete(items.Id)">Delete</button>
-                </td>
-            </tr>
-        }
 
-        @if (complementaryDrink)
-        {
-            <tr>
-                <td colspan="5">
-                    <strong>
-                        <h4>Free Complementary Drink ;)</h4>
-                    </strong>
-                    <br />
-                    Customer already made 10 purchases
-                </td>
-                <td>1</td>
-                <td>0</td>
-                <td></td>
-            </tr>
+<div class="container">
+    <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <td>S.No.</td>
+                            <td>Coffee</td>
+                            <td>Addins</td>
+                            <td>CoffeePrice</td>
+                            <td>AddinsPrice</td>
+                            <td>Qty</td>
+                            <td>Costs</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < order.Count; i++)
+                        {
+                            var items = order[i];
+                            <tr>
+                                <td>@(i + 1)</td>
+                                <td>@items.CoffeeName</td>
+                                <td>@items.AddinName</td>
+                                <td>@items.CoffeePrice</td>
+                                <td>@items.AddinPrice</td>
+                                <td>@items.Qty</td>
+                                <td>@items.TotalPrice</td>
+                                <td>
+                                    <button class="btn btn-danger" @onclick="() => Delete(items.Id)">Delete</button>
+                                </td>
+                            </tr>
+                        }
+
+                        @if (complementaryDrink)
+                        {
+                            <tr>
+                                <td colspan="5">
+                                    <strong>
+                                        <h4>Free Complementary Drink ;)</h4>
+                                    </strong>
+                                    <br />
+                                    Customer already made 10 purchases
+                                </td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td></td>
+                            </tr>
             
-            <tr></tr> <!-- If you want an empty row after the complementary drink message -->
-        }
+                            <tr></tr> 
+                        }
 
-        @if (getDiscount == true)
-        {
-            <tr>
-                <td colspan="6"><strong>Grand Total (10% off):</strong></td>
-                <td><strong>@grandTotal</strong></td>
-                <td></td>
-            </tr>
-        }
-        else
-        {
-            <tr>
-                <td colspan="6"><strong>Grand Total:</strong></td>
-                <td><strong>@grandTotal</strong></td>
-                <td></td>
-            </tr>
-        }
-    </tbody>
-</table>
+                        @if (getDiscount == true)
+                        {
+                            <tr>
+                                <td colspan="6"><strong>Grand Total (10% off):</strong></td>
+                                <td><strong>@grandTotal</strong></td>
+                                <td></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6"><strong>Grand Total:</strong></td>
+                                <td><strong>@grandTotal</strong></td>
+                                <td></td>
+                            </tr>
+                        }
+                    </tbody>
+                 </table>
+        </div>
+</div>
 
 @code {
     private List<CoffeeShop.Models.Addins> addin { get; set; }
@@ -360,7 +392,7 @@
         isNameEditable = true;
         isContactEditable = true;
         isDateEditable = true;
-
+        orders.CreatedAt = DateTime.Now.Date;
         grandTotal = 0;
     }
 
@@ -411,6 +443,7 @@
             isDateEditable = true;
             complementaryDrink = false;
             grandTotal = 0;
+            orders.CreatedAt = DateTime.Now.Date;
         }
         else
         {

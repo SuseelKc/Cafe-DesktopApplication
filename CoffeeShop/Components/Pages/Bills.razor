@@ -6,29 +6,35 @@
 
 
 <h3>Sales</h3>
+<div class="row">
 <div><label>From Date:</label><input type="date" @bind="fromDate" /> <label>   To Date:</label><input type="date" @bind="toDate" /> <button class="btn btn-success" @onclick="(e) => PrintRange(fromDate, toDate)">Generate PDF</button></div>
-
+</div>
 
 
 <div style="text-align: right;"><button class="btn btn-success" @onclick="SaveAllPDF">All PDF</button></div>
 <br>
-<table class="table table-bordered">
-    <thead>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
         <tr>
-            <td>Id</td>
+            <td>S.No</td>
+            <td>Bill No.(Id)</td>
             <td>Date</td>
             <td>UserName</td>
             <td>Contact</td>
-            <td>Totaal Amount</td>
+            <td>Total Amount</td>
             
             <td>Action</td>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in billMaster)
-        {
+        @for (int i = 0; i < billMaster.Count; i++)
+                {
+            var item = billMaster[i];
             <tr>
 
+                <td>@(i + 1)</td>
                 <td>@item.Id</td>
                 <td>@item.CreatedAt</td>
                 <td>@item.CustomerName</td>
@@ -44,7 +50,10 @@
             </tr>
         }
     </tbody>
-</table>
+        </table>
+    </div>
+</div>
+
 
 
 
@@ -52,7 +61,7 @@
     private List<CoffeeShop.Models.BillMaster> billMaster { get; set; }
     private List<CoffeeShop.Models.BillDetail> billDetail { get; set; }
     private DateTime fromDate;
-    private DateTime toDate;
+    private DateTime toDate=DateTime.Now.Date;
 
     protected override void OnInitialized()
     {

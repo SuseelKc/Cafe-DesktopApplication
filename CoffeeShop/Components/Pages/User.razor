@@ -3,53 +3,68 @@
 <h3>User/Staff</h3>
 
 <EditForm Model="@users">
-    <div>
-        <!-- ... -->
-        <label class="form-label">UserName</label>
-        <input type="text" class="form" id="coffee" @bind="users.Username" />
-        <br><br>
+    <div class="container mt-4">
+        <div class="col-md-6">
+            <div class="mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="username" @bind="users.Username" />
+                </div>
+            </div>
 
-        <label class="form-label">Password</label>
-        <input type="text" class="form" id="price" @bind="users.PasswordHash" />
-        <!-- ... -->
-        <button class="btn btn-primary" @onclick="Add">Create</button>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password" @bind="users.PasswordHash" />
+                </div>
+            </div>
+
+            <div class="text-left">
+                <button class="btn btn-primary" @onclick="Add">Create</button>
+            </div>
+        </div>
     </div>
 </EditForm>
+
 <br>
-<br>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <td>Id</td>
-            <td>UserName</td>
-            <td>CreatedBy</td>
-            <td>CreatedAt</td>
-            <td>Role</td>
-            <td>Action</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in user)
-        {
-            <tr>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <td>S.No.</td>
+                    <td>Id</td>
+                    <td>UserName</td>
+               
+                    <td>CreatedAt</td>
+                    <td>Role</td>
+                    <td>Action</td>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < user.Count; i++)
+                {
+                    var item = user[i];
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@item.Id</td>
+                        <td>@item.Username</td>
                 
-                <td>@item.Id</td>
-                <td>@item.Username</td>
-                <td>@item.CreatedBy</td>
-                <td>@item.CreatedAt</td>
-                <td>@item.Role</td>
-                <td>
-                    @if (@item.Role == Role.User)
-                    {
-                        <button class="btn btn-danger" @onclick="() => Delete(item.Id)">Delete</button>
-                    }
-                </td>
-                
-                
-            </tr>
-        }
-    </tbody>
-</table>
+                        <td>@item.CreatedAt</td>
+                        <td>@item.Role</td>
+                        <td>
+                            @if (@item.Role == Role.User)
+                            {
+                                <button class="btn btn-danger" @onclick="() => Delete(item.Id)">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
 
 
