@@ -97,6 +97,12 @@ namespace CoffeeShop.Services
             return Path.Combine(GetAppDirectoryPath(), "billmaster.json");
         }
 
+        //customers members
+        public static string GetMembersFilePath()
+        {
+            return Path.Combine(GetAppDirectoryPath(), "members.json");
+        }
+
     }
 }
 

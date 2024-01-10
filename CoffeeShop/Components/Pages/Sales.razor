@@ -9,10 +9,7 @@
 
 <EditForm Model="@orders">
     <div class="container mt-4">
-       @*  <div class="row mb-3">
-           
-        </div> *@
-
+ 
         <div class="row mb-3">
             <div class="col-md-4">
                 <label class="form-label">Name:</label>
@@ -199,7 +196,8 @@
     private List<CoffeeShop.Models.Order> order { get; set; }
     private List<CoffeeShop.Models.BillDetail> billDetail { get; set; }
     private List<CoffeeShop.Models.BillMaster> billMaster { get; set; }
-
+    private List<CoffeeShop.Models.Member> member { get; set; }
+    private CoffeeShop.Models.Member members = new();
 
     private CoffeeShop.Models.Order orders = new CoffeeShop.Models.Order
         {
@@ -227,6 +225,7 @@
         addin = AddinService.GetAll();
         coffee = CoffeeService.GetAll();
         order = OrderService.GetAll();
+        member = MemberService.GetAll();
 
     }
 
@@ -348,7 +347,7 @@
             complementaryDrink = true;
         }
 
-     
+
 
         getDiscount = BillMasterService.CountAndCheckDiscount(orders.Contact);
 
@@ -403,6 +402,21 @@
     {
         billMaster = BillMasterService.GetAll();
         billDetail = BillDetailService.GetAll();
+        member = MemberService.GetAll();
+        //for solving id duplicacy
+        if (member.Count == 0) { members.Id = member.Count + 1; }
+        else
+        {
+            members.Id = member.Max(c => c.Id) + 1;
+        }
+            //
+        
+        bool usernameExists = member.Any(x => x.CustomerNumber == orders.Contact);
+
+        if (!usernameExists)
+        {
+            MemberService.AddMember(members.Id, orders.CustomerName, orders.Contact);
+        }
 
         // Check if there are orders to generate a bill
         if (order.Any())
