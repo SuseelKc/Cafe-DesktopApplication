@@ -74,7 +74,13 @@
         {
             return;
         }
-        coffees.Id = coffee.Count + 1;
+        //for solving id duplicacy
+        if (coffee.Count == 0) { coffees.Id = coffee.Count + 1; }
+        else
+        {
+            coffees.Id = coffee.Max(c => c.Id) + 1;
+        }
+        //
         CoffeeService.AddCoffee(coffees.Id, coffees.CoffeeName, coffees.Price);
 
         coffees = new();

@@ -74,7 +74,13 @@
         {
             return;
         }
-        addins.Id = addin.Count + 1;
+        //for solving id duplicacy
+        if (addin.Count == 0) { addins.Id = addin.Count + 1; }
+        else
+        {
+            addins.Id = addin.Max(c => c.Id) + 1;
+        }
+        //
         AddinService.AddAddins(addins.Id, addins.Name, addins.Price);
 
         addins = new();
