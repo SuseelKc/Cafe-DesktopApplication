@@ -168,8 +168,15 @@
                         @if (getDiscount == true)
                         {
                             <tr>
-                                <td colspan="6"><strong>Grand Total (10% off):</strong></td>
-                                <td><strong>@grandTotal</strong></td>
+                                
+                                <td colspan="6">
+                                    <strong>Total </strong><br>
+                                    <strong>Grand Total (10% off):</strong>
+                                    </td>
+                                <td>
+                                     <strong>@grandTotal</strong><br>
+                                    <strong>@(grandTotal - (grandTotal * 0.10))</strong>
+                                </td>
                                 <td></td>
                             </tr>
                         }
@@ -341,20 +348,9 @@
             complementaryDrink = true;
         }
 
-        // Current date
-        DateTime currentDate = DateTime.Now.Date;
+     
 
-        // Date range up to the last 2 days
-        DateTime startDate = currentDate.AddDays(-2);
-
-        int consecutiveDateCount = BillMasterService.CountConsecutiveByContact(contactNumber, startDate, currentDate);
-
-        // Check for consecutive purchases for the last 2 days
-        if (consecutiveDateCount >= 2)
-        {
-            getDiscount = true;
-        }
-
+        getDiscount = BillMasterService.CountAndCheckDiscount(orders.Contact);
 
 
 
@@ -392,6 +388,7 @@
         isNameEditable = true;
         isContactEditable = true;
         isDateEditable = true;
+        getDiscount = false;
         orders.CreatedAt = DateTime.Now.Date;
         grandTotal = 0;
     }
@@ -411,7 +408,7 @@
         if (order.Any())
         {
             //as the customer gets 10%discounts for regularpurchase
-            @if (getDiscount==true)
+            @if (getDiscount)
             {
                 grandTotal -= grandTotal * 0.1;
             }
@@ -442,6 +439,7 @@
             isContactEditable = true;
             isDateEditable = true;
             complementaryDrink = false;
+            getDiscount = false;
             grandTotal = 0;
             orders.CreatedAt = DateTime.Now.Date;
         }

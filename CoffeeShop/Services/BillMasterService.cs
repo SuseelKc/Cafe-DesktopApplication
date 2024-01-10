@@ -45,34 +45,6 @@ namespace CoffeeShop.Services
             return billMasters.Count(bill => bill.Contact == contactNumber);
         }
 
-        public static int CountConsecutiveByContact(string contactNumber, DateTime startDate, DateTime endDate)
-        {
-            var billMasters = GetAll();
-
-            int consecutiveCount = 0;
-            int currentConsecutiveCount = 0;
-            DateTime currentDate = startDate.Date;
-
-            while (currentDate <= endDate.Date)
-            {
-                bool isDatePresent = billMasters.Any(bill => bill.Contact == contactNumber && bill.CreatedAt.Date == currentDate);
-
-                if (isDatePresent)
-                {
-                    currentConsecutiveCount++;
-                }
-                else
-                {
-                    consecutiveCount = Math.Max(consecutiveCount, currentConsecutiveCount);
-                    currentConsecutiveCount = 0;
-                }
-
-                currentDate = currentDate.AddDays(1);
-            }
-
-            return consecutiveCount;
-        }
-
 
         //adding the vlaue
         public static List<BillMaster> AddBillMaster(int Id, DateTime CreatedAt, string Customername, string Contact, double TotalPrice)
@@ -97,6 +69,47 @@ namespace CoffeeShop.Services
             return billMaster;
 
         }
+
+
+
+        public static bool CountAndCheckDiscount(string contactNumber)
+        {
+            var billMasters = GetAll();
+
+            // Filter bills for the specific contact number
+            var customerBills = billMasters.Where(bill => bill.Contact == contactNumber).OrderBy(bill => bill.CreatedAt).ToList();
+
+            // Initialize variables for counting consecutive days
+            int consecutiveCount = 0;
+            DateTime previousDate = DateTime.MinValue;
+
+            foreach (var bill in customerBills)
+            {
+                // Check if the current bill is on the next consecutive day
+                if (bill.CreatedAt.Date == previousDate.AddDays(1).Date)
+                {
+                    consecutiveCount++;
+                }
+                else
+                {
+                    // Reset the count if there is a gap in consecutive dates
+                    consecutiveCount = 1;
+                }
+
+                // Update the previous date for the next iteration
+                previousDate = bill.CreatedAt.Date;
+
+                // Check if the customer has continuous purchases for more than 30 days
+                if (consecutiveCount > 30)
+                {
+                    return true; //  GetDiscount  to true after 30 days regular 
+                }
+            }
+
+            return false; // Set GetDiscount flag to false
+        }
+
+
 
 
     }
