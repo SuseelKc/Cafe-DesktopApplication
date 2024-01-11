@@ -411,9 +411,9 @@
         }
             //
         
-        bool usernameExists = member.Any(x => x.CustomerNumber == orders.Contact);
+        bool userExists = member.Any(x => x.CustomerNumber == orders.Contact);
 
-        if (!usernameExists)
+        if (!userExists)
         {
             MemberService.AddMember(members.Id, orders.CustomerName, orders.Contact);
         }
